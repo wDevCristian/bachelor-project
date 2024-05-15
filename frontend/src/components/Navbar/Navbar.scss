@@ -1,0 +1,22 @@
+.navbar {
+  &-list {
+    display: flex;
+    align-items: center;
+
+    li {
+      list-style: none;
+      margin-right: 2em;
+      padding-bottom: 0.1em;
+      cursor: pointer;
+      transition: all ease 0.2s;
+
+      &:hover {
+        transform: translateY(-0.1em);
+      }
+    }
+  }
+}
+
+.active {
+  border-bottom: 0.1em rgb(189, 189, 189) solid;
+}

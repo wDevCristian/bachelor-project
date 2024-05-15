@@ -1,0 +1,22 @@
+.hero {
+  height: 100vh;
+  margin: 0 auto;
+  padding: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)),
+    url("../../assets/img/students.jpg") no-repeat;
+  background-size: cover;
+  color: white;
+
+  &-content {
+    padding-top: 45%;
+
+    &__title {
+      font-size: 4.5rem;
+    }
+
+    &__description {
+      margin-top: 0.75em;
+      font-size: 1.25em;
+    }
+  }
+}

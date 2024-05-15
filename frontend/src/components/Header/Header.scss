@@ -1,0 +1,18 @@
+header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 0.05em rgb(223, 223, 223) solid;
+  background-color: rgba(253, 253, 253, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
