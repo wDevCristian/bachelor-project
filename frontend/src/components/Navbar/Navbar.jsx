@@ -28,8 +28,7 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import QuizRoundedIcon from "@mui/icons-material/QuizRounded";
 import EventRoundedIcon from "@mui/icons-material/EventRounded";
 
-export default function Navbar({ toAuthPage }) {
-  const [menuItem, setMenuItem] = useState("home");
+export default function Navbar({ toAuthPage, menuItem, setMenuItem }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -191,13 +190,6 @@ export default function Navbar({ toAuthPage }) {
               "& .JoyListItemButton-root": { p: "8px" },
               mx: 0.5,
             }}
-            // size="md"
-            // component="nav"
-            // sx={{
-            //   flex: "none",
-            //   fontSize: "md",
-            //   "& > div": { justifyContent: "center" },
-            //}}
           >
             <Divider>
               <Chip size="sm">Menu</Chip>

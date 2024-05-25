@@ -1,27 +1,7 @@
 .about {
-  color: #323232;
-
-  &-content {
-    display: flex;
-    padding: 3em 0 3em 0;
-    gap: 1em;
-    justify-content: space-between;
-
-    &__title {
-      margin-top: 2em;
-      text-transform: uppercase;
-      font-weight: 500;
-    }
-
-    &__description {
-      margin: 2em 0 3em 0;
-      max-width: 30ch;
-    }
-
-    img {
-      max-width: 40vw;
-      border-radius: 50%;
-      margin-bottom: 5em;
-    }
+  img {
+    aspect-ratio: 1 / 1;
+    max-width: 90%;
+    border-radius: 50%;
   }
 }

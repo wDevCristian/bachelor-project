@@ -23,14 +23,21 @@ import "./FAQ.scss";
 export default function FAQ() {
   return (
     <>
-      <section className="faq container">
+      <div className="faq container">
         <div className="faq-content">
           <Typography level="h2">FAQ</Typography>
           <AccordionGroup
             sx={{
+              fontSize: {
+                xs: "sm",
+                sm: "md",
+              },
               marginTop: "2em",
               [`& .${accordionClasses.root}`]: {
-                width: "90%",
+                width: {
+                  xs: "100%",
+                  sm: "90%",
+                },
                 margin: "1em auto 0 auto",
                 transition: "0.2s ease",
                 '& button:not([aria-expanded="true"])': {
@@ -58,7 +65,11 @@ export default function FAQ() {
                 <HelpOutlineIcon></HelpOutlineIcon>
                 Cu ce transport ajung în Timișoara?
               </AccordionSummary>
-              <AccordionDetails>
+              <AccordionDetails
+                sx={{
+                  fontSize: { xs: "sm", sm: "md" },
+                }}
+              >
                 Chișinău - Timișoara:
                 <Link
                   href="https://lavial.ro/tours/chisinau-timisoara-transport/"
@@ -66,6 +77,9 @@ export default function FAQ() {
                   target="_blank"
                   rel="noopener"
                   startDecorator={<DirectionsBusIcon />}
+                  sx={{
+                    fontSize: { xs: "sm", sm: "md" },
+                  }}
                 >
                   Lavial
                 </Link>
@@ -75,6 +89,9 @@ export default function FAQ() {
                   target="_blank"
                   rel="noopener"
                   startDecorator={<DirectionsBusIcon />}
+                  sx={{
+                    fontSize: { xs: "sm", sm: "md" },
+                  }}
                 >
                   Niko
                 </Link>
@@ -86,7 +103,11 @@ export default function FAQ() {
                 Care e procesul de obținere a vizei de reședință?
               </AccordionSummary>
               <AccordionDetails>
-                <Typography>
+                <Typography
+                  sx={{
+                    fontSize: { xs: "sm", sm: "md" },
+                  }}
+                >
                   Procesul de obținere a vizei este descris{" "}
                   <Link
                     href="https://drive.google.com/file/d/1dXIp2tJ3flb6ZnTnFCtWD97iZn0PD8aI/"
@@ -107,7 +128,12 @@ export default function FAQ() {
                 Care e procesul de obținere a permisului de ședere?
               </AccordionSummary>
               <AccordionDetails>
-                <List marker="decimal">
+                <List
+                  marker="decimal"
+                  sx={{
+                    fontSize: { xs: "sm", sm: "md" },
+                  }}
+                >
                   <ListItem>
                     <b>PERMIS DE ȘEDERE</b> își fac doar persoanele care au
                     obținut <b>VIZA DE REȘEDINȚĂ</b>.
@@ -128,13 +154,23 @@ export default function FAQ() {
                     Pentru cei admiși la <b>CONTRACT</b>, există două situații
                     de achitare a <b>TAXELOR</b>:
                   </ListItem>
-                  <List marker="disc">
+                  <List
+                    marker="disc"
+                    sx={{
+                      fontSize: { xs: "sm", sm: "md" },
+                    }}
+                  >
                     <ListItem>
                       Dacă se achită <b>CONTRACTUL ÎN LEI ROMÂNEȘTI</b>, e
                       necesar de achitat contravaloarea în lei românești a taxei
                       consulare de 120 de EURO, la cursul zilei al BNR.
                     </ListItem>
-                    <List marker="circle">
+                    <List
+                      marker="circle"
+                      sx={{
+                        fontSize: { xs: "sm", sm: "md" },
+                      }}
+                    >
                       <ListItem>
                         Cei care își plătesc studiile în <b>LEI ROMÂNEȘTI</b>,{" "}
                         <u>nu trebuie</u> să facă dovada mijloacelor de
@@ -148,7 +184,12 @@ export default function FAQ() {
                       ROMÂNEȘTI, reprezentând contravaloarea permisului de
                       ședere.
                     </ListItem>
-                    <List marker="circle">
+                    <List
+                      marker="circle"
+                      sx={{
+                        fontSize: { xs: "sm", sm: "md" },
+                      }}
+                    >
                       <ListItem>
                         Cei care își plătesc studiile în <b>VALUTĂ</b>,{" "}
                         <u>trebuie</u> să facă dovada mijloacelor de întreținere
@@ -169,26 +210,26 @@ export default function FAQ() {
                     zile.
                   </ListItem>
                   <ListItem>
-                    <Typography>
-                      Dosarul pentru obținerea permisului de ședere se depune la
-                      <b> INSPECTORATUL GENERAL PENTRU IMIGRĂRI</b> în orașul
-                      reședință al județului în care se află persoana. În
-                      continuare se poate de accesat link-ul pentru a afla
-                      informație privind adresa și orarul de funcționare al
-                      diferitor servicii oferite de Inspectorat, pentru județul
-                      respectiv{" "}
-                      <Link
-                        href="https://portaligi.mai.gov.ro/portaligi/"
-                        underline="hover"
-                        target="_blank"
-                        rel="noopener"
-                        startDecorator={<Launch fontSize="sm" />}
-                      >
-                        {" "}
-                        portaligi.mai.gov.ro/portaligi
-                      </Link>
-                      .
-                    </Typography>
+                    Dosarul pentru obținerea permisului de ședere se depune la
+                    <b> INSPECTORATUL GENERAL PENTRU IMIGRĂRI</b> în orașul
+                    reședință al județului în care se află persoana. În
+                    continuare se poate de accesat link-ul pentru a afla
+                    informație privind adresa și orarul de funcționare al
+                    diferitor servicii oferite de Inspectorat, pentru județul
+                    respectiv{" "}
+                    <Link
+                      href="https://portaligi.mai.gov.ro/portaligi/"
+                      underline="hover"
+                      target="_blank"
+                      rel="noopener"
+                      startDecorator={<Launch fontSize="sm" />}
+                      sx={{
+                        fontSize: { xs: "sm", sm: "md" },
+                      }}
+                    >
+                      {" "}
+                      portaligi.mai.gov.ro/portaligi
+                    </Link>
                   </ListItem>
                 </List>
                 <FAQTablePermision />
@@ -206,7 +247,7 @@ export default function FAQ() {
             </Accordion>
           </AccordionGroup>
         </div>
-      </section>
+      </div>
     </>
   );
 }

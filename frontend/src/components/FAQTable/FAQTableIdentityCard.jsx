@@ -13,7 +13,13 @@ import "./FAQTableIdentityCard.scss";
 export default function FAQTableIdentityCard() {
   return (
     <Table
-      sx={{ margin: "2em 0 1.25em 0" }}
+      sx={{
+        margin: "2em 0 1.25em 0",
+        fontSize: {
+          xs: "xs",
+          sm: "md",
+        },
+      }}
       variant="outlined"
       borderAxis="bothBetween"
       color="neutral"
@@ -37,7 +43,14 @@ export default function FAQTableIdentityCard() {
             domiciliu în străinătate
           </td>
           <td>
-            <List size="sm" marker="disc">
+            <List
+              size="sm"
+              marker="disc"
+              sx={{
+                fontSize: { xs: "xs", sm: "md" },
+                lineHeight: { xs: "sm", sm: "md" },
+              }}
+            >
               <ListItem>
                 <Typography>
                   cererea poate fi obținută de la{" "}

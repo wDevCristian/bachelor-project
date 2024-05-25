@@ -8,7 +8,7 @@
   color: white;
 
   &-content {
-    padding-top: 45%;
+    padding-top: 45vh;
 
     &__title {
       font-size: 4.5rem;
@@ -17,6 +17,21 @@
     &__description {
       margin-top: 0.75em;
       font-size: 1.25em;
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .hero {
+    &-content {
+      padding-top: 55vh;
+      &__title {
+        font-size: 2rem;
+      }
+      &__description {
+        margin-top: 0.75em;
+        font-size: 0.9em;
+      }
     }
   }
 }

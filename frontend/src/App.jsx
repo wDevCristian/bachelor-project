@@ -4,14 +4,16 @@ import React, { useState } from "react";
 import Header from "./components/Header/Header.jsx";
 import Home from "./pages/Home/Home";
 import FAQ from "./pages/FAQ/FAQ";
+import Events from "./pages/Events/Events.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Footer from "./components/Footer/Footer.jsx";
+import EventDetails from "./pages/EventDetails/EventDetails.jsx";
 
 // Component CSS Styles
 import "./App.scss";
 
 // React Routers
-import { Routes, Route, ScrollRestoration } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import ScrollToTop from "./ScrollToTop.js";
 
@@ -75,7 +77,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login toAuthPage={setIsAuthPage} />} />
-        {/* <Route path="/events" element={<Events />} /> */}
+        <Route path="/events" element={<Events />} />
+        <Route path="/events/eventId" element={<EventDetails />} />
         <Route path="/faq" element={<FAQ />} />
       </Routes>
 

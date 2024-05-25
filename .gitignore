@@ -1,1 +1,5 @@
 **/test-iosocket
+**/frontend/public/*
+**/frontend/src/assets/img/react.svg
+**/frontend/node_modules
+**/frontend/.env

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Table from "@mui/joy/Table";
 import Typography from "@mui/joy/Typography";
@@ -12,9 +12,21 @@ import Launch from "@mui/icons-material/Launch";
 import "./FAQTablePermision.scss";
 
 export default function FAQTablePermision() {
+  // useEffect(() => {
+  //   window.addEventListener("resize", () => {
+  //     console.log("resizing");
+  //   });
+  // }, []);
+
   return (
     <Table
-      sx={{ margin: "2em 0 1.25em 0" }}
+      sx={{
+        margin: "2em 0 1.25em 0",
+        fontSize: {
+          xs: "xs",
+          sm: "sm",
+        },
+      }}
       variant="outlined"
       borderAxis="bothBetween"
       color="neutral"
@@ -58,7 +70,10 @@ export default function FAQTablePermision() {
         <tr>
           <td>Scrisoare de acceptare la studii</td>
           <td>
-            <List sx={{ fontSize: "sm", lineHeight: "md" }} marker="disc">
+            <List
+              sx={{ fontSize: { xs: "xs", sm: "sm" }, lineHeight: "md" }}
+              marker="disc"
+            >
               <ListItem>
                 La UVT o obțineți de la info-centru. Pentru a solicita
                 adeverința scrieți la adresa{" "}
@@ -68,7 +83,9 @@ export default function FAQTablePermision() {
                 La UPT o obțineți de la rectorat, Departamentul de Relații
                 Internaționale (sala 112), solicitarea poate fi scrisă la adresa{" "}
                 <Link href="mailto:romanidepretutindeni@upt.ro">
-                  romanidepretutindeni@upt.ro
+                  {window.innerWidth > 767
+                    ? "romanidepretutindeni@upt.ro"
+                    : "romani...@upt.ro"}
                 </Link>
               </ListItem>
             </List>
