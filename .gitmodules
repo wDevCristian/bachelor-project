@@ -1,0 +1,3 @@
+[submodule "adaptm-server"]
+	path = adaptm-server
+	url = https://github.com/wDevCristian/adaptm-server.git
