@@ -14,15 +14,51 @@ import {
   Button,
 } from "@mui/joy";
 
+const eventTypes = [
+  {
+    name: "sport",
+    label: "Sport",
+  },
+  {
+    name: "culture",
+    label: "Cultură",
+  },
+  {
+    name: "entertainment",
+    label: "Distracție",
+  },
+  {
+    name: "music",
+    label: "Muzică",
+  },
+];
+
+export { eventTypes };
+
 // MUI Icons
 import { KeyboardArrowDown, Check as CheckIcon } from "@mui/icons-material";
 
-export default function Filter() {
+export default function Filter({ setFilters }) {
   const [value, setValue] = useState([0, 100]);
   const [selectedVariant, setSelectedVariant] = useState([]);
+  const [periodSelect, setPeriodSelect] = useState("season");
 
+  function handlePeriodChange(e, newValue) {
+    setPeriodSelect(newValue);
+    // console.log(newValue);
+  }
+
+  function handleFilterApply(e) {
+    setFilters({
+      participantsRange: value.map((elem) => Math.trunc(elem * 2.5)),
+      typeEvents: selectedVariant,
+      periodSelect,
+    });
+  }
+
+  const valueLabelFormat = (value) => Math.trunc(value * 2.5);
   const handleChange = (event, newValue) => {
-    console.log(newValue);
+    // console.log(newValue);
     setValue(newValue);
   };
 
@@ -52,12 +88,12 @@ export default function Filter() {
                 justifyContent: "start",
               }}
             >
-              {["Sport", "Cultură", "Distracție", "Muzică"].map((name) => {
-                const checked = selectedVariant.includes(name);
+              {eventTypes.map((elem) => {
+                const checked = selectedVariant.includes(elem.name);
                 return (
                   <Chip
                     size="sm"
-                    key={name}
+                    key={elem.name}
                     variant="plain"
                     color={checked ? "primary" : "neutral"}
                     startDecorator={
@@ -78,13 +114,13 @@ export default function Filter() {
                       color={checked ? "primary" : "neutral"}
                       disableIcon
                       overlay
-                      label={name}
+                      label={elem.label}
                       checked={checked}
                       onChange={(event) => {
                         setSelectedVariant((names) =>
                           !event.target.checked
-                            ? names.filter((n) => n !== name)
-                            : [...names, name]
+                            ? names.filter((n) => n !== elem.name)
+                            : [...names, elem.name]
                         );
                       }}
                     />
@@ -104,6 +140,7 @@ export default function Filter() {
           rowGap={1}
         >
           <Select
+            onChange={handlePeriodChange}
             placeholder="Perioadă…"
             indicator={<KeyboardArrowDown />}
             sx={{
@@ -117,11 +154,11 @@ export default function Filter() {
               },
             }}
           >
-            <Option value="today">Azi</Option>
-            <Option value="tomorrow">Maine</Option>
+            <Option value="today">O zi</Option>
+            <Option value="tomorrow">Două zile</Option>
             <Option value="week">Săptămâna aceasta</Option>
             <Option value="month">Luna aceasta</Option>
-            <Option value="other">...</Option>
+            <Option value="season">În 3 luni</Option>
           </Select>
           <Box
             width={"max(20ch, 30%)"}
@@ -140,6 +177,8 @@ export default function Filter() {
               valueLabelDisplay="on"
               size="sm"
               value={value}
+              step={0.4}
+              valueLabelFormat={valueLabelFormat}
               marks={[
                 {
                   value: 0,
@@ -147,7 +186,7 @@ export default function Filter() {
                 },
                 {
                   value: 100,
-                  label: "100",
+                  label: "250",
                 },
               ]}
               sx={{
@@ -156,6 +195,7 @@ export default function Filter() {
             />
           </Box>
           <Button
+            onClick={handleFilterApply}
             size="md"
             variant="soft"
             sx={{

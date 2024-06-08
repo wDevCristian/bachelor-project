@@ -20,7 +20,7 @@ import TodayRoundedIcon from "@mui/icons-material/TodayRounded";
 import EmojiPeopleRoundedIcon from "@mui/icons-material/EmojiPeopleRounded";
 import BookmarkAddRoundedIcon from "@mui/icons-material/BookmarkAddRounded";
 
-export default function EventCard({ eventTitle }) {
+export default function EventCard({ event, bookmark }) {
   return (
     <Card
       sx={{
@@ -45,38 +45,45 @@ export default function EventCard({ eventTitle }) {
             }}
           >
             <img
-              src="./src/assets/img/about-img.jpeg"
+              src={event.picture}
               // srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
               loading="lazy"
               alt="event"
             />
           </Link>
         </AspectRatio>
-        <IconButton
-          aria-label="Like minimal photography"
-          size="lg"
-          variant="solid"
-          color="primary"
-          sx={{
-            position: "absolute",
-            zIndex: 2,
-            borderRadius: "50%",
-            right: "1rem",
-            bottom: 0,
-            transform: "translateY(50%)",
-          }}
-        >
-          <BookmarkAddRoundedIcon fontSize="md" />
-        </IconButton>
+        {bookmark && (
+          <IconButton
+            aria-label="Like minimal photography"
+            size="lg"
+            variant="solid"
+            color="primary"
+            sx={{
+              position: "absolute",
+              zIndex: 2,
+              borderRadius: "50%",
+              right: "1rem",
+              bottom: 0,
+              transform: "translateY(50%)",
+            }}
+          >
+            <BookmarkAddRoundedIcon fontSize="md" />
+          </IconButton>
+        )}
       </CardOverflow>
       <CardContent sx={{ gap: 1 }}>
-        <Typography level="title-lg">{eventTitle}</Typography>
-        <Typography level="body-sm">Organizator eveniment</Typography>
+        <Typography level="title-lg">{event.title}</Typography>
+        <Typography level="body-sm">{event.organizer}</Typography>
       </CardContent>
 
       <CardOverflow variant="soft" sx={{ bgcolor: "background.level1" }}>
         <Divider inset="context" />
-        <CardContent orientation="horizontal">
+        <CardContent
+          orientation="horizontal"
+          sx={{
+            columnGap: "0.5rem",
+          }}
+        >
           <Stack direction="row" alignItems="center" spacing={1}>
             <EmojiPeopleRoundedIcon color="neutral" fontSize="sm" />
             <Typography
@@ -84,7 +91,7 @@ export default function EventCard({ eventTitle }) {
               fontWeight="md"
               textColor="text.secondary"
             >
-              Participanți
+              {event.nrOfParticipants}
             </Typography>
           </Stack>
           <Divider orientation="vertical" />
@@ -95,7 +102,7 @@ export default function EventCard({ eventTitle }) {
               fontWeight="md"
               textColor="text.secondary"
             >
-              Data și oră
+              {event.date}, {event.time}
             </Typography>
           </Stack>
         </CardContent>
@@ -103,3 +110,11 @@ export default function EventCard({ eventTitle }) {
     </Card>
   );
 }
+
+// eventTitle = "Title",
+//   organizer = "Author",
+//   nrOfParticipants = 25,
+//   date = "04.06.2024",
+//   time = "14:45",
+//   bookmark = true,
+//   picture = "./src/assets/img/about-img.jpeg",

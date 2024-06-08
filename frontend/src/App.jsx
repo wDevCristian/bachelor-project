@@ -8,6 +8,9 @@ import Events from "./pages/Events/Events.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 import EventDetails from "./pages/EventDetails/EventDetails.jsx";
+import EventCreate from "./pages/EventCreate/EventCreate.jsx";
+import UserEvents from "./pages/UserEvents/UserEvents.jsx";
+import NoPageError from "./pages/NoPageError/NoPageError.jsx";
 
 // Component CSS Styles
 import "./App.scss";
@@ -79,7 +82,10 @@ function App() {
         <Route path="/login" element={<Login toAuthPage={setIsAuthPage} />} />
         <Route path="/events" element={<Events />} />
         <Route path="/events/eventId" element={<EventDetails />} />
+        <Route path="/myevents" element={<UserEvents />} />
+        <Route path="/myevents/create" element={<EventCreate />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="*" element={<NoPageError />} />
       </Routes>
 
       {!isAuthPage && <Footer />}

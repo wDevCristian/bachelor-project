@@ -27,6 +27,7 @@ import { ListItemDecorator, ListItemContent, Divider, Chip } from "@mui/joy";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import QuizRoundedIcon from "@mui/icons-material/QuizRounded";
 import EventRoundedIcon from "@mui/icons-material/EventRounded";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function Navbar({ toAuthPage, menuItem, setMenuItem }) {
   const [open, setOpen] = useState(false);
@@ -46,64 +47,72 @@ export default function Navbar({ toAuthPage, menuItem, setMenuItem }) {
         justifyContent="end"
         alignItems="center"
         spacing={1}
-        sx={{ display: { xs: "none", sm: "flex" } }}
       >
-        <Button
-          variant="plain"
-          color="neutral"
-          component={Link}
-          to="/login"
-          size="sm"
-          aria-pressed={false}
-          sx={{ alignSelf: "center" }}
-          onClick={() => {
-            toAuthPage(true);
-          }}
+        <Stack
+          direction="row"
+          justifyContent="end"
+          alignItems="center"
+          spacing={1}
+          sx={{ display: { xs: "none", sm: "flex" } }}
         >
-          Login
-        </Button>
-        <Button
-          variant="plain"
-          color="neutral"
-          component={Link}
-          to="/"
-          size="sm"
-          aria-pressed={menuItem === "home" ? "true" : "false"}
-          sx={{ alignSelf: "center" }}
-          onClick={() => {
-            setMenuItem("home");
-          }}
-        >
-          Acasă
-        </Button>
-        <Button
-          variant="plain"
-          color="neutral"
-          component={Link}
-          to="/events"
-          size="sm"
-          aria-pressed={menuItem === "events" ? "true" : "false"}
-          sx={{ alignSelf: "center" }}
-          onClick={() => {
-            setMenuItem("events");
-          }}
-        >
-          Evenimente
-        </Button>
-        <Button
-          variant="plain"
-          color="neutral"
-          component={Link}
-          to="/faq"
-          size="sm"
-          aria-pressed={menuItem === "faq" ? "true" : "false"}
-          sx={{ alignSelf: "center" }}
-          onClick={() => {
-            setMenuItem("faq");
-          }}
-        >
-          FAQ
-        </Button>
+          <Button
+            variant="plain"
+            color="neutral"
+            component={Link}
+            to="/login"
+            size="sm"
+            aria-pressed={false}
+            sx={{ alignSelf: "center" }}
+            onClick={() => {
+              toAuthPage(true);
+            }}
+          >
+            Login
+          </Button>
+          <Button
+            variant="plain"
+            color="neutral"
+            component={Link}
+            to="/"
+            size="sm"
+            aria-pressed={menuItem === "home" ? "true" : "false"}
+            sx={{ alignSelf: "center" }}
+            onClick={() => {
+              setMenuItem("home");
+            }}
+          >
+            Acasă
+          </Button>
+          <Button
+            variant="plain"
+            color="neutral"
+            component={Link}
+            to="/events"
+            size="sm"
+            aria-pressed={menuItem === "events" ? "true" : "false"}
+            sx={{ alignSelf: "center" }}
+            onClick={() => {
+              setMenuItem("events");
+            }}
+          >
+            Evenimente
+          </Button>
+          <Button
+            variant="plain"
+            color="neutral"
+            component={Link}
+            to="/faq"
+            size="sm"
+            aria-pressed={menuItem === "faq" ? "true" : "false"}
+            sx={{ alignSelf: "center" }}
+            onClick={() => {
+              setMenuItem("faq");
+            }}
+          >
+            FAQ
+          </Button>
+        </Stack>
+
         <Dropdown>
           <MenuButton
             variant="plain"
@@ -115,10 +124,13 @@ export default function Navbar({ toAuthPage, menuItem, setMenuItem }) {
             }}
           >
             <Avatar
-              src="https://i.pravatar.cc/40?img=2"
-              srcSet="https://i.pravatar.cc/80?img=2"
-              sx={{ maxWidth: "32px", maxHeight: "32px" }}
-            />
+              // src="https://i.pravatar.cc/40?img=2"
+              // srcSet="https://i.pravatar.cc/80?img=2"
+              // sx={{ maxWidth: "32px", maxHeight: "32px" }}
+              alt="logo"
+            >
+              NP
+            </Avatar>
           </MenuButton>
           <Menu
             placement="bottom-end"
@@ -130,7 +142,7 @@ export default function Navbar({ toAuthPage, menuItem, setMenuItem }) {
               "--ListItem-radius": "var(--joy-radius-sm)",
             }}
           >
-            <MenuItem>
+            <MenuItem disabled>
               <Box
                 sx={{
                   display: "flex",
@@ -138,10 +150,13 @@ export default function Navbar({ toAuthPage, menuItem, setMenuItem }) {
                 }}
               >
                 <Avatar
-                  src="https://i.pravatar.cc/40?img=2"
-                  srcSet="https://i.pravatar.cc/80?img=2"
-                  sx={{ borderRadius: "50%" }}
-                />
+                  // src="https://i.pravatar.cc/40?img=2"
+                  // srcSet="https://i.pravatar.cc/80?img=2"
+                  // sx={{ borderRadius: "50%" }}
+                  alt="logo"
+                >
+                  NP
+                </Avatar>
                 <Box sx={{ ml: 1.5 }}>
                   <Typography level="title-sm" textColor="text.primary">
                     Prenume Nume
@@ -153,92 +168,100 @@ export default function Navbar({ toAuthPage, menuItem, setMenuItem }) {
               </Box>
             </MenuItem>
             <ListDivider />
+            <MenuItem component={Link} to="/myevents">
+              <EventRoundedIcon />
+              Evenimentele mele
+            </MenuItem>
+            <MenuItem component={Link} to="/myevents/create">
+              <AddIcon />
+              Crează eveniment
+            </MenuItem>
+            <ListDivider />
             <MenuItem>
               <LogoutRoundedIcon />
-              Log out
+              Ieșire
             </MenuItem>
           </Menu>
         </Dropdown>
-      </Stack>
-
-      <Box
-        sx={{
-          display: { xs: "inline-flex", sm: "none" },
-          pl: 6,
-        }}
-      >
-        <IconButton
-          variant="plain"
-          color="neutral"
-          onClick={() => setOpen(true)}
+        <Box
+          sx={{
+            display: { xs: "inline-flex", sm: "none" },
+            // pl: 6,
+          }}
         >
-          <MenuRoundedIcon />
-        </IconButton>
-        <Drawer
-          sx={{ display: { xs: "inline-flex", sm: "none" } }}
-          open={open}
-          anchor="right"
-          onClose={() => setOpen(false)}
-        >
-          <ModalClose />
-          <DialogTitle>ADAPTM</DialogTitle>
-          <List
-            size="sm"
-            sx={{
-              "--ListItem-radius": "8px",
-              "--List-gap": "4px",
-              "& .JoyListItemButton-root": { p: "8px" },
-              mx: 0.5,
-            }}
+          <IconButton
+            variant="plain"
+            color="neutral"
+            onClick={() => setOpen(true)}
           >
-            <Divider>
-              <Chip size="sm">Menu</Chip>
-            </Divider>
-            <ListItemButton
-              selected={menuItem === "home" ? true : false}
-              component={Link}
-              to="/"
-              onClick={() => {
-                setMenuItem("home");
-                setOpen(false);
+            <MenuRoundedIcon />
+          </IconButton>
+          <Drawer
+            sx={{ display: { xs: "inline-flex", sm: "none" } }}
+            open={open}
+            anchor="right"
+            onClose={() => setOpen(false)}
+          >
+            <ModalClose />
+            <DialogTitle>ADAPTM</DialogTitle>
+            <List
+              size="sm"
+              sx={{
+                "--ListItem-radius": "8px",
+                "--List-gap": "4px",
+                "& .JoyListItemButton-root": { p: "8px" },
+                mx: 0.5,
               }}
             >
-              <ListItemDecorator>
-                <HomeRoundedIcon fontSize="small" />
-              </ListItemDecorator>
-              <ListItemContent fontSize="sm">Acasă</ListItemContent>
-            </ListItemButton>
-            <ListItemButton
-              selected={menuItem === "events" ? true : false}
-              component={Link}
-              to="/events"
-              onClick={() => {
-                setMenuItem("events");
-                setOpen(false);
-              }}
-            >
-              <ListItemDecorator>
-                <EventRoundedIcon fontSize="small" />
-              </ListItemDecorator>
-              <ListItemContent fontSize="sm">Evenimente</ListItemContent>
-            </ListItemButton>
-            <ListItemButton
-              selected={menuItem === "faq" ? true : false}
-              component={Link}
-              to="/faq"
-              onClick={() => {
-                setMenuItem("faq");
-                setOpen(false);
-              }}
-            >
-              <ListItemDecorator>
-                <QuizRoundedIcon fontSize="small" />
-              </ListItemDecorator>
-              <ListItemContent fontSize="sm">FAQ</ListItemContent>
-            </ListItemButton>
-          </List>
-        </Drawer>
-      </Box>
+              <Divider>
+                <Chip size="sm">Menu</Chip>
+              </Divider>
+              <ListItemButton
+                selected={menuItem === "home" ? true : false}
+                component={Link}
+                to="/"
+                onClick={() => {
+                  setMenuItem("home");
+                  setOpen(false);
+                }}
+              >
+                <ListItemDecorator>
+                  <HomeRoundedIcon fontSize="small" />
+                </ListItemDecorator>
+                <ListItemContent fontSize="sm">Acasă</ListItemContent>
+              </ListItemButton>
+              <ListItemButton
+                selected={menuItem === "events" ? true : false}
+                component={Link}
+                to="/events"
+                onClick={() => {
+                  setMenuItem("events");
+                  setOpen(false);
+                }}
+              >
+                <ListItemDecorator>
+                  <EventRoundedIcon fontSize="small" />
+                </ListItemDecorator>
+                <ListItemContent fontSize="sm">Evenimente</ListItemContent>
+              </ListItemButton>
+              <ListItemButton
+                selected={menuItem === "faq" ? true : false}
+                component={Link}
+                to="/faq"
+                onClick={() => {
+                  setMenuItem("faq");
+                  setOpen(false);
+                }}
+              >
+                <ListItemDecorator>
+                  <QuizRoundedIcon fontSize="small" />
+                </ListItemDecorator>
+                <ListItemContent fontSize="sm">FAQ</ListItemContent>
+              </ListItemButton>
+            </List>
+          </Drawer>
+        </Box>
+      </Stack>
     </nav>
   );
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Typography } from "@mui/joy";
 import "./Logo.scss";
 
 export default function Logo({ setMenuItem }) {
@@ -10,7 +11,9 @@ export default function Logo({ setMenuItem }) {
         style={{ textDecoration: "none" }}
         to="/"
       >
-        <h1>ADAPTM</h1>
+        <Typography level="h2" component="h1">
+          ADAPTM
+        </Typography>
       </Link>
     </div>
   );

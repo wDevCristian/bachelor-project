@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState } from "react";
 
 // Own components
 import Filter from "../../components/Filter/Filter";
@@ -8,6 +8,9 @@ import EventCards from "../../components/EventCards/EventCards";
 import { Typography } from "@mui/joy";
 
 export default function Events() {
+  const [filters, setFilters] = useState({});
+  console.log(filters);
+
   return (
     <div
       className="events container"
@@ -41,8 +44,8 @@ export default function Events() {
           Timișoara
         </Typography>
       </Typography>
-      <Filter />
-      <EventCards />
+      <Filter setFilters={setFilters} />
+      <EventCards filters={filters} bookmark={true} />
     </div>
   );
 }
