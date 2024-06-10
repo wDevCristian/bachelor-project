@@ -250,3 +250,4 @@ export default function EventCreate() {
   );
 }
 // TODO: write the logic to check if user has inputted the location of the event
+// TODO: minify/optimize images (consider this link: https://uploadcare.com/cdn/image-cdn/)
