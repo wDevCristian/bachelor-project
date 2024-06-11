@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 // React Components
 import Header from "./components/Header/Header.jsx";
@@ -11,22 +11,27 @@ import EventDetails from "./pages/EventDetails/EventDetails.jsx";
 import EventCreate from "./pages/EventCreate/EventCreate.jsx";
 import UserEvents from "./pages/UserEvents/UserEvents.jsx";
 import NoPageError from "./pages/NoPageError/NoPageError.jsx";
+import Register from "./pages/Register/Register.jsx";
 
 // Component CSS Styles
 import "./App.scss";
 
 // React Routers
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import ScrollToTop from "./ScrollToTop.js";
 
 // MUI Components
-import { IconButton } from "@mui/joy";
-import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
+import ScrollButton from "./components/ScrollButton/ScrollButton.jsx";
 
 function App() {
-  const [isAuthPage, setIsAuthPage] = useState(false);
   const [displaySTT, setDisplaySTT] = useState(false);
+  // Extracts pathname property(key) from an object
+  const { pathname } = useLocation();
+
+  // Automatically scrolls to top whenever pathname changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname]);
 
   useEffect(() => {
     const scrollHandler = () => {
@@ -39,18 +44,10 @@ function App() {
 
     window.addEventListener("scroll", scrollHandler);
 
-    setIsAuthPage(
-      window.location.pathname.split("/")[1] === "login" ? true : false
-    );
-
     return () => {
       window.removeEventListener("scroll", scrollHandler);
     };
   }, []);
-
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
 
   return (
     <div
@@ -60,38 +57,42 @@ function App() {
         position: "relative",
       }}
     >
-      {!isAuthPage && <Header toAuthPage={setIsAuthPage} />}
-      {displaySTT && (
-        <IconButton
-          variant="outlined"
-          color="neutral"
-          sx={{
-            position: "fixed",
-            bottom: 20,
-            right: 30,
-            zIndex: 30,
-            backgroundColor: "white",
-          }}
-          onClick={scrollToTop}
-        >
-          <KeyboardArrowUpOutlinedIcon />
-        </IconButton>
-      )}
+      <Header />
+      {displaySTT && <ScrollButton />}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login toAuthPage={setIsAuthPage} />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/events" element={<Events />} />
         <Route path="/events/eventId" element={<EventDetails />} />
+        {/* <RequireAuth> */}
         <Route path="/myevents" element={<UserEvents />} />
+        {/* </RequireAuth> */}
+        {/* <RequireAuth> */}
         <Route path="/myevents/create" element={<EventCreate />} />
+        {/* </RequireAuth> */}
         <Route path="/faq" element={<FAQ />} />
         <Route path="*" element={<NoPageError />} />
       </Routes>
 
-      {!isAuthPage && <Footer />}
-      <ScrollToTop />
+      <Footer />
     </div>
   );
 }
 
 export default App;
+
+// function RequireAuth({ children }) {
+//   let auth = useAuth();
+//   let location = useLocation();
+
+//   if (!auth.user) {
+//     // Redirect them to the /login page, but save the current location they were
+//     // trying to go to when they were redirected. This allows us to send them
+//     // along to that page after they login, which is a nicer user experience
+//     // than dropping them off on the home page.
+//     return <Navigate to="/login" state={{ from: location }} replace />;
+//   }
+
+//   return children;
+// }
