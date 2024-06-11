@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Navbar.scss";
 import "../Logo/Logo";
 import { Link, useNavigate } from "react-router-dom";
@@ -29,11 +29,12 @@ import QuizRoundedIcon from "@mui/icons-material/QuizRounded";
 import EventRoundedIcon from "@mui/icons-material/EventRounded";
 import AddIcon from "@mui/icons-material/Add";
 import LoginIcon from "@mui/icons-material/Login";
+import { Context } from "../../main";
 
 export default function Navbar({ menuItem, setMenuItem }) {
   const [open, setOpen] = useState(false);
-  const [isAuth, setIsAuth] = useState(true);
   let navigate = useNavigate();
+  const { user } = useContext(Context);
 
   useEffect(() => {
     const path = window.location.pathname.split("/")[1];
@@ -100,7 +101,7 @@ export default function Navbar({ menuItem, setMenuItem }) {
           >
             FAQ
           </Button>
-          {!isAuth && (
+          {!user.isAuth && (
             <Button
               variant="plain"
               color="neutral"
@@ -118,7 +119,7 @@ export default function Navbar({ menuItem, setMenuItem }) {
           )}
         </Stack>
 
-        {isAuth && (
+        {user.isAuth && (
           <Dropdown>
             <MenuButton
               variant="plain"
@@ -185,7 +186,7 @@ export default function Navbar({ menuItem, setMenuItem }) {
               <ListDivider />
               <MenuItem
                 onClick={() => {
-                  setIsAuth(false);
+                  user.setIsAuth(false);
                   navigate("/");
                 }}
               >
@@ -270,7 +271,7 @@ export default function Navbar({ menuItem, setMenuItem }) {
                 </ListItemDecorator>
                 <ListItemContent fontSize="sm">FAQ</ListItemContent>
               </ListItemButton>
-              {!isAuth && (
+              {!user.isAuth && (
                 <ListItemButton
                   selected={menuItem === "login" ? true : false}
                   component={Link}
