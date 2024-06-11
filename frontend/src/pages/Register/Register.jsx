@@ -7,12 +7,13 @@ import {
   FormLabel,
   Input,
   Typography,
+  Stack,
 } from "@mui/joy";
 import Sheet from "@mui/joy/Sheet";
 
 import { Link } from "react-router-dom";
 
-export default function Login() {
+export default function Register() {
   return (
     <CssVarsProvider>
       <Sheet
@@ -21,7 +22,7 @@ export default function Login() {
           position: "absolute",
           top: "50%",
           left: "50%",
-          width: 300,
+          minWidth: "min(500, 90vw)",
           mx: "auto",
           transform: "translate(-50%, -50%)",
           px: 3,
@@ -37,8 +38,15 @@ export default function Login() {
           <Typography component="h1" level="h4">
             Salut!
           </Typography>
-          <Typography level="body-sm">Logează-te pentru a continua.</Typography>
         </div>
+        <FormControl>
+          <FormLabel>Prenume</FormLabel>
+          <Input name="firstname" type="text" placeholder="Prenume"></Input>
+        </FormControl>
+        <FormControl>
+          <FormLabel>Nume</FormLabel>
+          <Input name="lastname" type="text" placeholder="Nume"></Input>
+        </FormControl>
         <FormControl>
           <FormLabel>Email</FormLabel>
           <Input name="email" type="email" placeholder="Email"></Input>
@@ -48,14 +56,14 @@ export default function Login() {
           <Input name="password" type="password" placeholder="Parolă"></Input>
         </FormControl>
         <Button component={Link} to="/" sx={{ mt: 1 }} variant="soft">
-          Login
+          Înregistrează
         </Button>
         <Typography
           sx={{ alignSelf: "center" }}
           fontSize="xs"
-          endDecorator={<Link to="/register">Înregistrează-te</Link>}
+          endDecorator={<Link to="/login">Login</Link>}
         >
-          Nu ai cont?
+          Ai cont?
         </Typography>
       </Sheet>
     </CssVarsProvider>
