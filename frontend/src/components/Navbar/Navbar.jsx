@@ -30,17 +30,20 @@ import EventRoundedIcon from "@mui/icons-material/EventRounded";
 import AddIcon from "@mui/icons-material/Add";
 import LoginIcon from "@mui/icons-material/Login";
 import { Context } from "../../main";
+import { observer } from "mobx-react-lite";
 
-export default function Navbar({ menuItem, setMenuItem }) {
+const Navbar = observer(() => {
   const [open, setOpen] = useState(false);
   let navigate = useNavigate();
-  const { user } = useContext(Context);
+  const { user, menuItemActive } = useContext(Context);
+
+  console.log(menuItemActive);
 
   useEffect(() => {
     const path = window.location.pathname.split("/")[1];
-    if (path.length === 0) setMenuItem("home");
+    if (path.length === 0) menuItemActive.setActiveItem("home");
     else {
-      setMenuItem(path);
+      menuItemActive.setActiveItem(path);
     }
   }, []);
 
@@ -65,10 +68,12 @@ export default function Navbar({ menuItem, setMenuItem }) {
             component={Link}
             to="/"
             size="sm"
-            aria-pressed={menuItem === "home" ? "true" : "false"}
+            aria-pressed={
+              menuItemActive.activeItem === "home" ? "true" : "false"
+            }
             sx={{ alignSelf: "center" }}
             onClick={() => {
-              setMenuItem("home");
+              menuItemActive.setActiveItem("home");
             }}
           >
             Acasă
@@ -79,10 +84,12 @@ export default function Navbar({ menuItem, setMenuItem }) {
             component={Link}
             to="/events"
             size="sm"
-            aria-pressed={menuItem === "events" ? "true" : "false"}
+            aria-pressed={
+              menuItemActive.activeItem === "events" ? "true" : "false"
+            }
             sx={{ alignSelf: "center" }}
             onClick={() => {
-              setMenuItem("events");
+              menuItemActive.setActiveItem("events");
             }}
           >
             Evenimente
@@ -93,10 +100,12 @@ export default function Navbar({ menuItem, setMenuItem }) {
             component={Link}
             to="/faq"
             size="sm"
-            aria-pressed={menuItem === "faq" ? "true" : "false"}
+            aria-pressed={
+              menuItemActive.activeItem === "faq" ? "true" : "false"
+            }
             sx={{ alignSelf: "center" }}
             onClick={() => {
-              setMenuItem("faq");
+              menuItemActive.setActiveItem("faq");
             }}
           >
             FAQ
@@ -108,10 +117,12 @@ export default function Navbar({ menuItem, setMenuItem }) {
               component={Link}
               to="/login"
               size="sm"
-              aria-pressed={menuItem === "login" ? "true" : "false"}
+              aria-pressed={
+                menuItemActive.activeItem === "login" ? "true" : "false"
+              }
               sx={{ alignSelf: "center" }}
               onClick={() => {
-                setMenuItem("login");
+                menuItemActive.setActiveItem("login");
               }}
             >
               Login
@@ -230,11 +241,11 @@ export default function Navbar({ menuItem, setMenuItem }) {
                 <Chip size="sm">Menu</Chip>
               </Divider>
               <ListItemButton
-                selected={menuItem === "home" ? true : false}
+                selected={menuItemActive.activeItem === "home" ? true : false}
                 component={Link}
                 to="/"
                 onClick={() => {
-                  setMenuItem("home");
+                  menuItemActive.setActiveItem("home");
                   setOpen(false);
                 }}
               >
@@ -244,11 +255,11 @@ export default function Navbar({ menuItem, setMenuItem }) {
                 <ListItemContent fontSize="sm">Acasă</ListItemContent>
               </ListItemButton>
               <ListItemButton
-                selected={menuItem === "events" ? true : false}
+                selected={menuItemActive.activeItem === "events" ? true : false}
                 component={Link}
                 to="/events"
                 onClick={() => {
-                  setMenuItem("events");
+                  menuItemActive.setActiveItem("events");
                   setOpen(false);
                 }}
               >
@@ -258,11 +269,11 @@ export default function Navbar({ menuItem, setMenuItem }) {
                 <ListItemContent fontSize="sm">Evenimente</ListItemContent>
               </ListItemButton>
               <ListItemButton
-                selected={menuItem === "faq" ? true : false}
+                selected={menuItemActive.activeItem === "faq" ? true : false}
                 component={Link}
                 to="/faq"
                 onClick={() => {
-                  setMenuItem("faq");
+                  menuItemActive.setActiveItem("faq");
                   setOpen(false);
                 }}
               >
@@ -273,11 +284,13 @@ export default function Navbar({ menuItem, setMenuItem }) {
               </ListItemButton>
               {!user.isAuth && (
                 <ListItemButton
-                  selected={menuItem === "login" ? true : false}
+                  selected={
+                    menuItemActive.activeItem === "login" ? true : false
+                  }
                   component={Link}
                   to="/login"
                   onClick={() => {
-                    setMenuItem("login");
+                    menuItemActive.setActiveItem("login");
                     setOpen(false);
                   }}
                 >
@@ -294,4 +307,6 @@ export default function Navbar({ menuItem, setMenuItem }) {
       </Stack>
     </nav>
   );
-}
+});
+
+export default Navbar;

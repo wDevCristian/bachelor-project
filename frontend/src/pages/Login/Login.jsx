@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import {
   Button,
@@ -11,8 +11,11 @@ import {
 import Sheet from "@mui/joy/Sheet";
 
 import { Link } from "react-router-dom";
+import { Context } from "../../main";
 
 export default function Login() {
+  const { user, menuItemActive } = useContext(Context);
+
   return (
     <CssVarsProvider>
       <Sheet
@@ -41,13 +44,27 @@ export default function Login() {
         </div>
         <FormControl>
           <FormLabel>Email</FormLabel>
-          <Input name="email" type="email" placeholder="Email"></Input>
+          <Input name="email" type="email" placeholder="Email" required></Input>
         </FormControl>
         <FormControl>
           <FormLabel>Parolă</FormLabel>
-          <Input name="password" type="password" placeholder="Parolă"></Input>
+          <Input
+            name="password"
+            type="password"
+            placeholder="Parolă"
+            required
+          ></Input>
         </FormControl>
-        <Button component={Link} to="/" sx={{ mt: 1 }} variant="soft">
+        <Button
+          component={Link}
+          to="/"
+          sx={{ mt: 1 }}
+          variant="soft"
+          onClick={() => {
+            user.setIsAuth(true);
+            menuItemActive.setActiveItem("home");
+          }}
+        >
           Login
         </Button>
         <Typography
