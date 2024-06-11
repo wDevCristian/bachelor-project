@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Navbar.scss";
 import "../Logo/Logo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import Logo from "../Logo/Logo";
 import Stack from "@mui/joy/Stack";
@@ -28,9 +28,12 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import QuizRoundedIcon from "@mui/icons-material/QuizRounded";
 import EventRoundedIcon from "@mui/icons-material/EventRounded";
 import AddIcon from "@mui/icons-material/Add";
+import LoginIcon from "@mui/icons-material/Login";
 
-export default function Navbar({ toAuthPage, menuItem, setMenuItem }) {
+export default function Navbar({ menuItem, setMenuItem }) {
   const [open, setOpen] = useState(false);
+  const [isAuth, setIsAuth] = useState(true);
+  let navigate = useNavigate();
 
   useEffect(() => {
     const path = window.location.pathname.split("/")[1];
@@ -55,20 +58,6 @@ export default function Navbar({ toAuthPage, menuItem, setMenuItem }) {
           spacing={1}
           sx={{ display: { xs: "none", sm: "flex" } }}
         >
-          <Button
-            variant="plain"
-            color="neutral"
-            component={Link}
-            to="/login"
-            size="sm"
-            aria-pressed={false}
-            sx={{ alignSelf: "center" }}
-            onClick={() => {
-              toAuthPage(true);
-            }}
-          >
-            Login
-          </Button>
           <Button
             variant="plain"
             color="neutral"
@@ -111,78 +100,101 @@ export default function Navbar({ toAuthPage, menuItem, setMenuItem }) {
           >
             FAQ
           </Button>
+          {!isAuth && (
+            <Button
+              variant="plain"
+              color="neutral"
+              component={Link}
+              to="/login"
+              size="sm"
+              aria-pressed={menuItem === "login" ? "true" : "false"}
+              sx={{ alignSelf: "center" }}
+              onClick={() => {
+                setMenuItem("login");
+              }}
+            >
+              Login
+            </Button>
+          )}
         </Stack>
 
-        <Dropdown>
-          <MenuButton
-            variant="plain"
-            size="sm"
-            sx={{
-              maxWidth: "32px",
-              maxHeight: "32px",
-              borderRadius: "9999999px",
-            }}
-          >
-            <Avatar
-              // src="https://i.pravatar.cc/40?img=2"
-              // srcSet="https://i.pravatar.cc/80?img=2"
-              // sx={{ maxWidth: "32px", maxHeight: "32px" }}
-              alt="logo"
+        {isAuth && (
+          <Dropdown>
+            <MenuButton
+              variant="plain"
+              size="sm"
+              sx={{
+                maxWidth: "32px",
+                maxHeight: "32px",
+                borderRadius: "9999999px",
+              }}
             >
-              NP
-            </Avatar>
-          </MenuButton>
-          <Menu
-            placement="bottom-end"
-            size="sm"
-            sx={{
-              zIndex: "99999",
-              p: 1,
-              gap: 1,
-              "--ListItem-radius": "var(--joy-radius-sm)",
-            }}
-          >
-            <MenuItem disabled>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
+              <Avatar
+                // src="https://i.pravatar.cc/40?img=2"
+                // srcSet="https://i.pravatar.cc/80?img=2"
+                // sx={{ maxWidth: "32px", maxHeight: "32px" }}
+                alt="logo"
+              >
+                NP
+              </Avatar>
+            </MenuButton>
+            <Menu
+              placement="bottom-end"
+              size="sm"
+              sx={{
+                zIndex: "99999",
+                p: 1,
+                gap: 1,
+                "--ListItem-radius": "var(--joy-radius-sm)",
+              }}
+            >
+              <MenuItem disabled>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Avatar
+                    // src="https://i.pravatar.cc/40?img=2"
+                    // srcSet="https://i.pravatar.cc/80?img=2"
+                    // sx={{ borderRadius: "50%" }}
+                    alt="logo"
+                  >
+                    NP
+                  </Avatar>
+                  <Box sx={{ ml: 1.5 }}>
+                    <Typography level="title-sm" textColor="text.primary">
+                      Prenume Nume
+                    </Typography>
+                    <Typography level="body-xs" textColor="text.tertiary">
+                      prenume_nume@email.com
+                    </Typography>
+                  </Box>
+                </Box>
+              </MenuItem>
+              <ListDivider />
+              <MenuItem component={Link} to="/myevents">
+                <EventRoundedIcon />
+                Evenimentele mele
+              </MenuItem>
+              <MenuItem component={Link} to="/myevents/create">
+                <AddIcon />
+                Crează eveniment
+              </MenuItem>
+              <ListDivider />
+              <MenuItem
+                onClick={() => {
+                  setIsAuth(false);
+                  navigate("/");
                 }}
               >
-                <Avatar
-                  // src="https://i.pravatar.cc/40?img=2"
-                  // srcSet="https://i.pravatar.cc/80?img=2"
-                  // sx={{ borderRadius: "50%" }}
-                  alt="logo"
-                >
-                  NP
-                </Avatar>
-                <Box sx={{ ml: 1.5 }}>
-                  <Typography level="title-sm" textColor="text.primary">
-                    Prenume Nume
-                  </Typography>
-                  <Typography level="body-xs" textColor="text.tertiary">
-                    prenume_nume@email.com
-                  </Typography>
-                </Box>
-              </Box>
-            </MenuItem>
-            <ListDivider />
-            <MenuItem component={Link} to="/myevents">
-              <EventRoundedIcon />
-              Evenimentele mele
-            </MenuItem>
-            <MenuItem component={Link} to="/myevents/create">
-              <AddIcon />
-              Crează eveniment
-            </MenuItem>
-            <ListDivider />
-            <MenuItem>
-              <LogoutRoundedIcon />
-              Ieșire
-            </MenuItem>
-          </Menu>
-        </Dropdown>
+                <LogoutRoundedIcon />
+                Ieșire
+              </MenuItem>
+            </Menu>
+          </Dropdown>
+        )}
         <Box
           sx={{
             display: { xs: "inline-flex", sm: "none" },
@@ -258,6 +270,23 @@ export default function Navbar({ toAuthPage, menuItem, setMenuItem }) {
                 </ListItemDecorator>
                 <ListItemContent fontSize="sm">FAQ</ListItemContent>
               </ListItemButton>
+              {!isAuth && (
+                <ListItemButton
+                  selected={menuItem === "login" ? true : false}
+                  component={Link}
+                  to="/login"
+                  onClick={() => {
+                    setMenuItem("login");
+                    setOpen(false);
+                  }}
+                >
+                  <ListItemDecorator>
+                    <LoginIcon fontSize="small" />
+                  </ListItemDecorator>
+                  <ListItemContent fontSize="sm">Login</ListItemContent>
+                </ListItemButton>
+              )}
+              {}
             </List>
           </Drawer>
         </Box>
