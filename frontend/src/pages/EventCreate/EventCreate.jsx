@@ -1,4 +1,5 @@
-import { useState, useRef, Fragment } from "react";
+import { React, useState, useRef, Fragment } from "react";
+import submitFormHandler from "../../helper/submitFormHandler.js";
 
 // MUI lib imports
 import {
@@ -23,6 +24,7 @@ import {
   SvgIcon,
   styled,
   Chip,
+  FormHelperText,
 } from "@mui/joy";
 
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
@@ -63,7 +65,7 @@ export default function EventCreate() {
       }}
     >
       <Typography level="h2">Crează un eveniment</Typography>
-      <form style={{ marginTop: "3em" }}>
+      <form style={{ marginTop: "3em" }} onSubmit={submitFormHandler}>
         <Stack rowGap={3}>
           <Box>
             <FormLabel>Titlul *</FormLabel>
@@ -115,8 +117,9 @@ export default function EventCreate() {
           </Box>
           <Stack direction="row" columnGap={2}>
             <Box>
-              <FormLabel>Dată</FormLabel>
+              <FormLabel>Dată *</FormLabel>
               <Input
+                required
                 type="date"
                 slotProps={{
                   input: {
@@ -126,8 +129,8 @@ export default function EventCreate() {
               ></Input>
             </Box>
             <Box>
-              <FormLabel>Oră</FormLabel>
-              <Input type="time"></Input>
+              <FormLabel>Oră *</FormLabel>
+              <Input required type="time"></Input>
             </Box>
           </Stack>
           <Box>
@@ -155,19 +158,20 @@ export default function EventCreate() {
                   width: "7ch",
                 }}
               >
-                <Option value="half">0</Option>
-                <Option value="quarter">15</Option>
-                <Option value="half">30</Option>
-                <Option value="quarter_to">45</Option>
+                <Option value="0">0</Option>
+                <Option value="15">15</Option>
+                <Option value="30">30</Option>
+                <Option value="45">45</Option>
               </Select>
               <Typography>minute</Typography>
             </Stack>
           </Box>
           <Box>
-            <FormLabel>Număr maxim de participanți *(max. 250)</FormLabel>
+            <FormLabel>Număr maxim de participanți * (max. 250)</FormLabel>
             <Input
+              required
               type="number"
-              placeholder="nelimitat"
+              defaultValue="20"
               slotProps={{
                 input: {
                   min: 1,
@@ -232,7 +236,11 @@ export default function EventCreate() {
             />
           </Box>
           <Box>
-            <FormLabel>Locație</FormLabel>
+            <FormLabel>Locație *</FormLabel>
+            <FormHelperText>
+              Glisați markerul roșu în locația în care va fi organizat
+              evenimentul.
+            </FormHelperText>
             <MapComponent></MapComponent>
           </Box>
           <Button type="submit">Crează eveniment</Button>
@@ -241,3 +249,5 @@ export default function EventCreate() {
     </div>
   );
 }
+// TODO: write the logic to check if user has inputted the location of the event
+// TODO: minify/optimize images (consider this link: https://uploadcare.com/cdn/image-cdn/)

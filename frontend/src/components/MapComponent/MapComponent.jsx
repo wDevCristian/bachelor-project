@@ -107,6 +107,10 @@ export default function MapComponent() {
           "coordinate",
           evt.mapBrowserEvent.coordinate.toString()
         );
+        localStorage.setItem(
+          "humanReadableCoords",
+          `${userCoords[1]},${userCoords[0]}`
+        );
         if (
           import.meta.env.VITE_GC_API_KEY !== null &&
           import.meta.env.VITE_GC_API_KEY !== undefined
@@ -125,7 +129,7 @@ export default function MapComponent() {
             });
         }
       }
-      console.log();
+      console.log(evt.mapBrowserEvent);
     });
     const overlaySource = modify.getOverlay().getSource();
     overlaySource.on(["addfeature", "removefeature"], function (evt) {
