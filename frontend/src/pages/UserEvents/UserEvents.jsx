@@ -48,9 +48,14 @@ export default function UserEvents() {
       <CssVarsProvider>
         <Typography level="h2">Evenimentele mele</Typography>
         <Stack
-          direction={windowWidth < 600 ? "column" : "row"}
           spacing={2}
           mt={3}
+          sx={{
+            flexDirection: {
+              md: "row",
+              sx: "column",
+            },
+          }}
         >
           <Box minWidth="20ch">
             <List
