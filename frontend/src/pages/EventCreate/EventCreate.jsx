@@ -25,9 +25,12 @@ import {
   styled,
   Chip,
   FormHelperText,
+  CardCover,
+  IconButton,
 } from "@mui/joy";
 
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+import CloseIcon from "@mui/icons-material/Close";
 
 import MapComponent from "../../components/MapComponent/MapComponent";
 
@@ -49,13 +52,23 @@ const MAX_TITLE_LENGTH = 80;
 export default function EventCreate() {
   const [charsTitle, setCharsTitle] = useState(MAX_TITLE_LENGTH);
   const [charsDescription, setCharsDescription] = useState(MAX_DESC_LENGTH);
+  const [file, setFile] = useState(null);
   const stringDate = new Date()
     .toLocaleDateString()
     .split(".")
     .reverse()
     .join("-");
 
-  const inputHandlerChars = (e) => {};
+  function handleFileUpload(e) {
+    console.log(e.target.files);
+    const fileURL = URL.createObjectURL(e.target.files[0]);
+    setFile({ filename: e.target.files[0].name, url: fileURL });
+  }
+
+  function hadleFileRemove(e) {
+    console.log(e.target.files);
+    setFile(null);
+  }
 
   return (
     <div
@@ -188,8 +201,9 @@ export default function EventCreate() {
                 border: "2px #a3a5a8 dashed",
                 borderRadius: 8,
                 textAlign: "center",
-                paddingBlock: 4,
+                paddingTop: 3,
               }}
+              paddingBlock={file ? 0 : 3}
             >
               <Button
                 component="label"
@@ -216,8 +230,52 @@ export default function EventCreate() {
                 }
               >
                 Încarcă imagine
-                <VisuallyHiddenInput type="file" accept="image/*" />
+                <VisuallyHiddenInput
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                />
               </Button>
+              {file && (
+                <Card
+                  sx={{
+                    minHeight: "100px",
+                    width: "150px",
+                    margin: "1em auto",
+                    position: "relative",
+                  }}
+                >
+                  <CloseIcon
+                    aria-label="event picture"
+                    size="xs"
+                    sx={{
+                      position: "absolute",
+                      top: "0.1rem",
+                      right: "0.1rem",
+                      color: "white",
+                      zIndex: 20,
+                      "&:hover": {
+                        cursor: "pointer",
+                      },
+                    }}
+                    onClick={hadleFileRemove}
+                  />
+                  <CardCover>
+                    <img src={file.url} loading="lazy" alt="Event image" />
+                  </CardCover>
+                  <CardCover
+                    sx={{
+                      background:
+                        "linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)",
+                    }}
+                  />
+                  <CardContent sx={{ justifyContent: "flex-end" }}>
+                    <Typography level="body-xs" textColor="#fff">
+                      {file.filename}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              )}
             </Box>
           </Box>
           <Box>
