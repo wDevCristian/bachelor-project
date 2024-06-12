@@ -15,10 +15,13 @@ import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
 // const ret = require("dotenv").config();
 
 export default function MapComponent() {
-  let coords = localStorage
-    .getItem("coordinate")
-    .split(",")
-    .map((i) => Number(i));
+  let candidateCoords = localStorage.getItem("coordinate");
+  let coords;
+
+  if (candidateCoords) {
+    coords = candidateCoords.split(",").map((i) => Number(i));
+  }
+
   const defCoordinates = [21.227263680022283, 45.74687634106235];
   let OMSformatCoordinates = coords ?? fromLonLat(defCoordinates);
 
