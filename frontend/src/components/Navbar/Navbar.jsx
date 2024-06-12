@@ -150,9 +150,13 @@ const Navbar = observer(() => {
                 }}
               >
                 <Avatar
-                  src={`${import.meta.env.VITE_SERVER_URL}/users/${
+                  src={
                     user.user.picture
-                  }`}
+                      ? `${import.meta.env.VITE_SERVER_URL}/users/${
+                          user.user.picture
+                        }`
+                      : "#"
+                  }
                   sx={{ maxWidth: "32px", maxHeight: "32px" }}
                   alt="logo"
                 >
