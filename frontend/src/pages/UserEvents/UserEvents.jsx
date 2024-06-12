@@ -36,6 +36,7 @@ import { CssVarsProvider } from "@mui/joy/styles";
 
 export default function UserEvents() {
   const [menuItem, setMenuItem] = useState("saved");
+  const windowWidth = window.innerWidth;
 
   return (
     <div
@@ -46,7 +47,11 @@ export default function UserEvents() {
     >
       <CssVarsProvider>
         <Typography level="h2">Evenimentele mele</Typography>
-        <Stack direction="row" spacing={2} mt={3}>
+        <Stack
+          direction={windowWidth < 600 ? "column" : "row"}
+          spacing={2}
+          mt={3}
+        >
           <Box minWidth="20ch">
             <List
               aria-labelledby="nav-list-browse"
@@ -88,7 +93,7 @@ export default function UserEvents() {
                   {/* <ListItemDecorator sx={{ color: "neutral.500" }}>
               <ArticleRoundedIcon fontSize="small" />
             </ListItemDecorator> */}
-                  <ListItemContent>Salvate</ListItemContent>
+                  <ListItemContent>Marcate</ListItemContent>
                   <Chip variant="soft" color="danger" size="sm">
                     2
                   </Chip>
