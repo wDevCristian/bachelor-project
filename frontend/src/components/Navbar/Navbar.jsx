@@ -351,6 +351,7 @@ const Navbar = observer(() => {
                 user.setIsAuth(false);
                 navigate("/");
                 setOpenModal(false);
+                localStorage.removeItem("token");
               }}
             >
               Confirmă

@@ -44,7 +44,7 @@ export default function Register() {
           position: "absolute",
           top: "50%",
           left: "50%",
-          minWidth: "min(500, 90vw)",
+          minWidth: "min(400px, 90vw)",
           mx: "auto",
           transform: "translate(-50%, -50%)",
           px: 3,
@@ -115,14 +115,14 @@ export default function Register() {
             variant="soft"
             loading={isLoading}
             loadingPosition="start"
-            disabled={
-              password.length === 0 ||
-              email.length === 0 ||
-              firstname.length === 0 ||
-              lastname.length === 0
-                ? true
-                : false
-            }
+            // disabled={
+            //   password.length === 0 ||
+            //   email.length === 0 ||
+            //   firstname.length === 0 ||
+            //   lastname.length === 0
+            //     ? true
+            //     : false
+            // }
           >
             {isLoading ? "Înregistrează..." : "Înregistrează"}
           </Button>

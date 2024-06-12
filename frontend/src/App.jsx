@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 // React Components
 import Header from "./components/Header/Header.jsx";
@@ -14,13 +14,32 @@ import { useEffect } from "react";
 // MUI Components
 import ScrollButton from "./components/ScrollButton/ScrollButton.jsx";
 import AppRouter from "./components/AppRouter/AppRouter.jsx";
+import { check } from "./api/userAPI.js";
+import { Context } from "./main.jsx";
+import { observer } from "mobx-react-lite";
+import LinearProgress from "@mui/joy/LinearProgress";
 
-function App() {
+const App = observer(() => {
   const [displaySTT, setDisplaySTT] = useState(false);
-  // Extracts pathname property(key) from an object
   const { pathname } = useLocation();
+  const { user } = useContext(Context);
+  const [loading, setLoading] = useState(true);
 
-  // Automatically scrolls to top whenever pathname changes
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      check()
+        .then((data) => {
+          user.setUser(data);
+          user.setIsAuth(true);
+        })
+        .finally(() => setLoading(false));
+    } else {
+      user.setIsAuth(false);
+      user.setUser(null);
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [pathname]);
@@ -41,6 +60,12 @@ function App() {
     };
   }, []);
 
+  if (loading) {
+    return (
+      <LinearProgress determinate={false} size="lg" value={25} variant="soft" />
+    );
+  }
+
   return (
     <div
       className="app"
@@ -55,6 +80,6 @@ function App() {
       <Footer />
     </div>
   );
-}
+});
 
 export default App;
