@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import {
   Button,
@@ -11,11 +11,30 @@ import {
 } from "@mui/joy";
 import Sheet from "@mui/joy/Sheet";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../../main";
+import { register } from "../../api/userAPI";
 
 export default function Register() {
-  const { menuItemActive } = useContext(Context);
+  const { user, menuItemActive } = useContext(Context);
+  const navigate = useNavigate();
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function registrationHandler(e) {
+    e.preventDefault();
+    setIsLoading(true);
+    const response = await register(firstname, lastname, email, password);
+    setIsLoading(false);
+    console.log(response);
+    menuItemActive.setActiveItem("home");
+    user.setUser(response);
+    user.setIsAuth(true);
+    navigate("/");
+  }
 
   return (
     <CssVarsProvider>
@@ -42,31 +61,73 @@ export default function Register() {
             Salut!
           </Typography>
         </div>
-        <FormControl>
-          <FormLabel>Prenume</FormLabel>
-          <Input name="firstname" type="text" placeholder="Prenume"></Input>
-        </FormControl>
-        <FormControl>
-          <FormLabel>Nume</FormLabel>
-          <Input name="lastname" type="text" placeholder="Nume"></Input>
-        </FormControl>
-        <FormControl>
-          <FormLabel>Email</FormLabel>
-          <Input name="email" type="email" placeholder="Email"></Input>
-        </FormControl>
-        <FormControl>
-          <FormLabel>Parolă</FormLabel>
-          <Input name="password" type="password" placeholder="Parolă"></Input>
-        </FormControl>
-        <Button
-          component={Link}
-          to="/"
-          sx={{ mt: 1 }}
-          variant="soft"
-          onClick={() => menuItemActive.setActiveItem("home")}
+        <form
+          style={{ display: "flex", flexDirection: "column", gap: 16 }}
+          onSubmit={registrationHandler}
         >
-          Înregistrează
-        </Button>
+          <FormControl required>
+            <FormLabel>Prenume</FormLabel>
+            <Input
+              required
+              name="firstname"
+              type="text"
+              placeholder="Prenume"
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
+            ></Input>
+          </FormControl>
+          <FormControl required>
+            <FormLabel>Nume</FormLabel>
+            <Input
+              required
+              name="lastname"
+              type="text"
+              placeholder="Nume"
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
+            ></Input>
+          </FormControl>
+          <FormControl required>
+            <FormLabel>Email</FormLabel>
+            <Input
+              required
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            ></Input>
+          </FormControl>
+          <FormControl required>
+            <FormLabel>Parolă</FormLabel>
+            <Input
+              required
+              name="password"
+              type="password"
+              placeholder="Parolă"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            ></Input>
+          </FormControl>
+          <Button
+            type="submit"
+            sx={{ width: "100%" }}
+            variant="soft"
+            loading={isLoading}
+            loadingPosition="start"
+            disabled={
+              password.length === 0 ||
+              email.length === 0 ||
+              firstname.length === 0 ||
+              lastname.length === 0
+                ? true
+                : false
+            }
+          >
+            {isLoading ? "Înregistrează..." : "Înregistrează"}
+          </Button>
+        </form>
+        {/* </form> */}
         <Typography
           sx={{ alignSelf: "center" }}
           fontSize="xs"

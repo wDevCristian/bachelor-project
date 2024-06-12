@@ -22,7 +22,14 @@ import IconButton from "@mui/joy/IconButton";
 import DialogTitle from "@mui/joy/DialogTitle";
 import List from "@mui/joy/List";
 import ListItemButton from "@mui/joy/ListItemButton";
-import { ListItemDecorator, ListItemContent, Divider, Chip } from "@mui/joy";
+import {
+  ListItemDecorator,
+  ListItemContent,
+  Divider,
+  Chip,
+  Modal,
+  ModalDialog,
+} from "@mui/joy";
 
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import QuizRoundedIcon from "@mui/icons-material/QuizRounded";
@@ -34,10 +41,9 @@ import { observer } from "mobx-react-lite";
 
 const Navbar = observer(() => {
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   let navigate = useNavigate();
   const { user, menuItemActive } = useContext(Context);
-
-  console.log(menuItemActive);
 
   useEffect(() => {
     const path = window.location.pathname.split("/")[1];
@@ -142,12 +148,14 @@ const Navbar = observer(() => {
               }}
             >
               <Avatar
-                // src="https://i.pravatar.cc/40?img=2"
-                // srcSet="https://i.pravatar.cc/80?img=2"
-                // sx={{ maxWidth: "32px", maxHeight: "32px" }}
+                src={`${import.meta.env.VITE_SERVER_URL}/users/${
+                  user.user.picture
+                }`}
+                sx={{ maxWidth: "32px", maxHeight: "32px" }}
                 alt="logo"
               >
-                NP
+                {user.user.firstname[0].toUpperCase() +
+                  user.user.lastname[0].toUpperCase()}
               </Avatar>
             </MenuButton>
             <Menu
@@ -168,19 +176,25 @@ const Navbar = observer(() => {
                   }}
                 >
                   <Avatar
-                    // src="https://i.pravatar.cc/40?img=2"
-                    // srcSet="https://i.pravatar.cc/80?img=2"
-                    // sx={{ borderRadius: "50%" }}
+                    sx={{ borderRadius: "50%" }}
+                    src={
+                      user.user.picture
+                        ? `${import.meta.env.VITE_SERVER_URL}/users/${
+                            user.user.picture
+                          }`
+                        : "#"
+                    }
                     alt="logo"
                   >
-                    NP
+                    {user.user.firstname[0].toUpperCase() +
+                      user.user.lastname[0].toUpperCase()}
                   </Avatar>
                   <Box sx={{ ml: 1.5 }}>
                     <Typography level="title-sm" textColor="text.primary">
-                      Prenume Nume
+                      {`${user.user.firstname} ${user.user.lastname}`}
                     </Typography>
                     <Typography level="body-xs" textColor="text.tertiary">
-                      prenume_nume@email.com
+                      {user.user.email}
                     </Typography>
                   </Box>
                 </Box>
@@ -197,8 +211,7 @@ const Navbar = observer(() => {
               <ListDivider />
               <MenuItem
                 onClick={() => {
-                  user.setIsAuth(false);
-                  navigate("/");
+                  setOpenModal(true);
                 }}
               >
                 <LogoutRoundedIcon />
@@ -300,11 +313,58 @@ const Navbar = observer(() => {
                   <ListItemContent fontSize="sm">Login</ListItemContent>
                 </ListItemButton>
               )}
-              {}
             </List>
           </Drawer>
         </Box>
       </Stack>
+      <Modal open={openModal} onClose={() => setOpenModal(false)}>
+        <ModalDialog
+          aria-labelledby="nested-modal-title"
+          aria-describedby="nested-modal-description"
+          sx={(theme) => ({
+            [theme.breakpoints.only("xs")]: {
+              top: "unset",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              borderRadius: 0,
+              transform: "none",
+              maxWidth: "unset",
+            },
+          })}
+        >
+          <Typography id="nested-modal-title" level="h2">
+            Sigur dorești să ieși?
+          </Typography>
+          <Box
+            sx={{
+              mt: 1,
+              display: "flex",
+              gap: 1,
+              flexDirection: { xs: "column", sm: "row-reverse" },
+            }}
+          >
+            <Button
+              variant="solid"
+              color="primary"
+              onClick={() => {
+                user.setIsAuth(false);
+                navigate("/");
+                setOpenModal(false);
+              }}
+            >
+              Confirmă
+            </Button>
+            <Button
+              variant="outlined"
+              color="neutral"
+              onClick={() => setOpenModal(false)}
+            >
+              Anulează
+            </Button>
+          </Box>
+        </ModalDialog>
+      </Modal>
     </nav>
   );
 });

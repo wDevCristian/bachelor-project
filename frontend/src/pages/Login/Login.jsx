@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import {
   Button,
@@ -10,11 +10,29 @@ import {
 } from "@mui/joy";
 import Sheet from "@mui/joy/Sheet";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../../main";
+import { login } from "../../api/userAPI";
+import axios from "axios";
 
 export default function Login() {
   const { user, menuItemActive } = useContext(Context);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    setIsLoading(true);
+    const response = await login(email, password);
+    setIsLoading(false);
+    console.log(response);
+    menuItemActive.setActiveItem("home");
+    user.setUser(response);
+    user.setIsAuth(true);
+    navigate("/");
+  }
 
   return (
     <CssVarsProvider>
@@ -42,31 +60,44 @@ export default function Login() {
           </Typography>
           <Typography level="body-sm">Logează-te pentru a continua.</Typography>
         </div>
-        <FormControl>
-          <FormLabel>Email</FormLabel>
-          <Input name="email" type="email" placeholder="Email" required></Input>
-        </FormControl>
-        <FormControl>
-          <FormLabel>Parolă</FormLabel>
-          <Input
-            name="password"
-            type="password"
-            placeholder="Parolă"
-            required
-          ></Input>
-        </FormControl>
-        <Button
-          component={Link}
-          to="/"
-          sx={{ mt: 1 }}
-          variant="soft"
-          onClick={() => {
-            user.setIsAuth(true);
-            menuItemActive.setActiveItem("home");
-          }}
+        <form
+          onSubmit={handleLogin}
+          style={{ display: "flex", flexDirection: "column", gap: "16px" }}
         >
-          Login
-        </Button>
+          <FormControl required>
+            <FormLabel>Email</FormLabel>
+            <Input
+              name="email"
+              type="email"
+              placeholder="Email"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+              required
+            ></Input>
+          </FormControl>
+          <FormControl required>
+            <FormLabel>Parolă</FormLabel>
+            <Input
+              name="password"
+              type="password"
+              placeholder="Parolă"
+              required
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            ></Input>
+          </FormControl>
+          <Button
+            loading={isLoading}
+            loadingPosition="start"
+            type="submit"
+            sx={{ mt: 1 }}
+            variant="soft"
+          >
+            {isLoading ? "Login..." : "Login"}
+          </Button>
+        </form>
         <Typography
           sx={{ alignSelf: "center" }}
           fontSize="xs"
