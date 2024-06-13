@@ -1,10 +1,15 @@
 import axios from "axios";
+import { $authHost } from "../api/index.js";
 
-export default async function submitFormHandler(event) {
+/**
+ * Handles the form submission for creating a new event.
+ *
+ * @param {Event} event - The event object representing the form submission.
+ * @returns {Promise<AxiosResponse<any, any>>}
+ */
+
+export default async function submitFormHandler(event, organizerId) {
   event.preventDefault();
-
-  // currentTarget doesn't work with MUI (JoyUI)
-  console.log(event);
 
   const startDateTime = formatStartDateTime(
     event.target[3].value,
@@ -71,24 +76,14 @@ export default async function submitFormHandler(event) {
     }
   }
 
-  formData.append("organizerId", 1);
+  formData.append("organizerId", organizerId.toString());
 
   for (let pair of formData.entries()) {
     console.log(`${pair[0]}: ${pair[1]}`);
   }
 
-  try {
-    response = await axios.postForm(
-      "http://localhost:5050/api/event/create",
-      formData
-    );
-
-    console.log("Response: ", response);
-  } catch (error) {
-    console.log(error);
-  }
-
-  // console.log(JSON.stringify(eventObject));
+  response = await $authHost.post(`/api/event/create`, formData);
+  return response;
 }
 
 /**
