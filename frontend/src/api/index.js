@@ -1,10 +1,15 @@
 import axios from "axios";
+
+const REQ_TIMEOUT = 15000;
+
 const $host = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URL,
+  timeout: REQ_TIMEOUT,
 });
 
 const $authHost = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URL,
+  timeout: REQ_TIMEOUT,
 });
 
 const authInterceptor = (config) => {
