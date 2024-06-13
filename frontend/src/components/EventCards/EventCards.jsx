@@ -7,31 +7,16 @@ import { eventTypes } from "../Filter/Filter";
 import eventsMocked from "../../model/mock_data";
 import EventCardLoading from "../EventCard/EventCardLoading";
 import { Context } from "../../main";
-import { getAll } from "../../api/eventAPI";
 
 export default function EventCards({
   filters = {},
   maxItemsInRow = 4,
+  isLoading = false,
   isBookmarkIcon = false,
   isEditIcon = false,
 }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorObj, setErrorObj] = useState({ isError: false, message: "" });
-  const { events } = useContext(Context);
-  const limit = 32;
-  const page = 1;
-
-  useEffect(() => {
-    getAll(limit, page)
-      .then((fetchedEvents) => events.setEvents(fetchedEvents))
-      .catch((error) => {
-        console.log(error);
-        setErrorObj({ isError: true, message: error.message });
-      })
-      .finally(() => setIsLoading(false));
-  }, []);
-
   let filteredEvents = eventsMocked;
+  const { events } = useContext(Context);
 
   if (Object.keys(filters).length !== 0) {
     filteredEvents = events.filter((e) => {

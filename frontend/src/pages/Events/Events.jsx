@@ -1,14 +1,35 @@
-import { React, useState } from "react";
+import { React, useContext, useEffect, useState } from "react";
+import { getAll } from "../../api/eventAPI";
+import { Context } from "../../main";
 
 // Own components
 import Filter from "../../components/Filter/Filter";
 import EventCards from "../../components/EventCards/EventCards";
 
 // MUI Components
-import { Typography } from "@mui/joy";
+import { Alert, IconButton, Typography } from "@mui/joy";
+import ReportIcon from "@mui/icons-material/Report";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 export default function Events() {
   const [filters, setFilters] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorObj, setErrorObj] = useState({ isError: false, message: "" });
+  const { events } = useContext(Context);
+  const limit = 16;
+  const page = 1;
+
+  useEffect(() => {
+    getAll(limit, page)
+      .then((fetchedEvents) => {
+        events.setEvents(fetchedEvents);
+      })
+      .catch((error) => {
+        console.log(error);
+        setErrorObj({ isError: true, message: error.message });
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
 
   return (
     <div
@@ -44,12 +65,39 @@ export default function Events() {
         </Typography>
       </Typography>
       <Filter setFilters={setFilters} />
-      <EventCards
-        filters={filters}
-        isBookmarkIcon={true}
-        isEditIcon={false}
-        maxItemsInRow={4}
-      />
+      {!errorObj.isError && (
+        <EventCards
+          filters={filters}
+          isBookmarkIcon={true}
+          isEditIcon={false}
+          maxItemsInRow={4}
+          isLoading={isLoading}
+        />
+      )}
+
+      {errorObj.isError && (
+        <Alert
+          startDecorator={<ReportIcon />}
+          variant="soft"
+          color="danger"
+          endDecorator={
+            <IconButton
+              variant="soft"
+              color="danger"
+              onClick={() => setErrorObj({ isError: false, message: "" })}
+            >
+              <CloseRoundedIcon />
+            </IconButton>
+          }
+        >
+          <div>
+            <div>Error</div>
+            <Typography level="body-sm" color="danger">
+              {errorObj.message}
+            </Typography>
+          </div>
+        </Alert>
+      )}
     </div>
   );
 }
