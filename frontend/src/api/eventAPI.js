@@ -10,7 +10,12 @@ export async function getAll(limit, page) {
   return data;
 }
 
-export async function getById(id) {
+export async function getEventsByOrganizerId(organizerId) {
+  const { data } = await $authHost.get(`${EVENT_API_URL}/all/${organizerId}`);
+  return data;
+}
+
+export async function getEventsDetailsById(id) {
   const { data } = await $host.get(`${EVENT_API_URL}/${id}`);
   return data;
 }
