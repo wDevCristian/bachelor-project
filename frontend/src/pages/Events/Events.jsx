@@ -23,6 +23,7 @@ export default function Events() {
     getAll(limit, page)
       .then((fetchedEvents) => {
         events.setEvents(fetchedEvents);
+        // throw new Error("Test events not found.");
       })
       .catch((error) => {
         console.log(error);
@@ -68,6 +69,7 @@ export default function Events() {
       {!errorObj.isError && (
         <EventCards
           filters={filters}
+          eventsObject={events.events}
           isBookmarkIcon={true}
           isEditIcon={false}
           maxItemsInRow={4}

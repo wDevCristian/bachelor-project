@@ -24,15 +24,25 @@ export default function EventCardLoading() {
     >
       <CardOverflow>
         <AspectRatio minHeight="120px" maxHeight="200px">
-          <Skeleton />
+          <Skeleton
+            animation={`${import.meta.env.VITE_SKELETON_ANIMATION_TYPE}`}
+          />
         </AspectRatio>
       </CardOverflow>
       <CardContent sx={{ gap: 1, paddingTop: "7px" }}>
         <Typography level="title-lg">
-          <Skeleton>{MAX_LENGTH_TITLE_PLACEHOLDER}</Skeleton>
+          <Skeleton
+            animation={`${import.meta.env.VITE_SKELETON_ANIMATION_TYPE}`}
+          >
+            {MAX_LENGTH_TITLE_PLACEHOLDER}
+          </Skeleton>
         </Typography>
         <Typography level="body-sm">
-          <Skeleton>{MAX_LENGTH_ORGANIZER_PLACEHOLDER}</Skeleton>
+          <Skeleton
+            animation={`${import.meta.env.VITE_SKELETON_ANIMATION_TYPE}`}
+          >
+            {MAX_LENGTH_ORGANIZER_PLACEHOLDER}
+          </Skeleton>
         </Typography>
       </CardContent>
 
@@ -46,13 +56,21 @@ export default function EventCardLoading() {
         >
           <Stack direction="row" alignItems="center" spacing={1}>
             <Typography level="body-xs" fontWeight="md">
-              <Skeleton>###</Skeleton>
+              <Skeleton
+                animation={`${import.meta.env.VITE_SKELETON_ANIMATION_TYPE}`}
+              >
+                ###
+              </Skeleton>
             </Typography>
           </Stack>
           <Divider orientation="vertical" />
           <Stack direction="row" alignItems="center" spacing={0.5}>
             <Typography level="body-xs" fontWeight="md">
-              <Skeleton>##.##.####, ##;##</Skeleton>
+              <Skeleton
+                animation={`${import.meta.env.VITE_SKELETON_ANIMATION_TYPE}`}
+              >
+                ##.##.####, ##;##
+              </Skeleton>
             </Typography>
           </Stack>
         </CardContent>

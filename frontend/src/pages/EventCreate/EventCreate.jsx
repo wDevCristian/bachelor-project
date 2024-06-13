@@ -150,10 +150,10 @@ export default function EventCreate() {
                     },
                   }}
                 >
-                  <Option value="sport">Sport</Option>
-                  <Option value="culture">Cultură</Option>
-                  <Option value="entertainment">Distracție</Option>
-                  <Option value="music">Muzică</Option>
+                  <Option value="Sport">Sport</Option>
+                  <Option value="Cultură">Cultură</Option>
+                  <Option value="Distracție">Distracție</Option>
+                  <Option value="Muzică">Muzică</Option>
                 </Select>
               </Box>
               <Stack direction="row" columnGap={2}>

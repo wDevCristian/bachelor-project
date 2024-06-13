@@ -10,6 +10,7 @@ import { Context } from "../../main";
 
 export default function EventCards({
   filters = {},
+  eventsObject: eventsArray = [],
   maxItemsInRow = 4,
   isLoading = false,
   isBookmarkIcon = false,
@@ -17,6 +18,8 @@ export default function EventCards({
 }) {
   let filteredEvents = eventsMocked;
   const { events } = useContext(Context);
+
+  console.log(eventsArray);
 
   if (Object.keys(filters).length !== 0) {
     filteredEvents = events.filter((e) => {
@@ -94,7 +97,7 @@ export default function EventCards({
     });
   }
 
-  const preloadedCards = events.events.map((event) => (
+  const preloadedCards = eventsArray.map((event) => (
     <Grid
       key={event.id}
       xs={12}
@@ -125,13 +128,13 @@ export default function EventCards({
   });
 
   return (
-    <Grid container mt={6} pb={14} spacing={3.5}>
+    <Grid container pt="7px" pb={14} spacing={3.5}>
       {isLoading && loadingCards}
-      {!isLoading && events.events.length !== 0 && preloadedCards}
-      {!isLoading && events.events.length === 0 && (
+      {!isLoading && eventsArray.length !== 0 && preloadedCards}
+      {!isLoading && eventsArray.length === 0 && (
         <Grid xs={12}>
-          <Typography level="title-lg" textAlign="center">
-            No events found
+          <Typography level="title-lg" textAlign="center" width="100%">
+            Nu au fost găsite evenimente
           </Typography>
         </Grid>
       )}

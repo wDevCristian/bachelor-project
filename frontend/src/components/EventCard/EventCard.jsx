@@ -52,6 +52,8 @@ export default function EventCard({ event, isBookmarkIcon, isEditIcon }) {
     return title.slice(0, brakePosition + 1) + "...";
   };
 
+  console.log("eventID: ", event.id);
+
   return (
     <Card
       sx={{
@@ -71,7 +73,7 @@ export default function EventCard({ event, isBookmarkIcon, isEditIcon }) {
       <CardOverflow>
         <AspectRatio minHeight="120px" maxHeight="200px">
           <Link
-            to="/events/eventId"
+            to={"/events/" + event.id}
             style={{
               textDecoration: "none",
               "&:hover": {

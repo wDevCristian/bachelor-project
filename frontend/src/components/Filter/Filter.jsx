@@ -71,6 +71,7 @@ export default function Filter({ setFilters }) {
         alignItems="left"
         rowGap={2}
         marginTop={4}
+        marginBottom={2}
       >
         <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
           <div>
