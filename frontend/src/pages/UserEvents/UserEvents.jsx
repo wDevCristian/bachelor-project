@@ -106,20 +106,26 @@ export default function UserEvents() {
               </ListItem>
             </List>
           </Box>
-          {menuItem === "saved" && <EventCards bookmark={false}></EventCards>}
+          {menuItem === "saved" && (
+            <EventCards
+              maxItemsInRow={3}
+              isBookmarkIcon={false}
+              isEditIcon={false}
+            ></EventCards>
+          )}
           {menuItem === "participant" && (
-            <EventCards bookmark={true}></EventCards>
+            <EventCards
+              maxItemsInRow={3}
+              isBookmarkIcon={false}
+              isEditIcon={false}
+            ></EventCards>
           )}
           {menuItem === "organizer" && (
-            <Button
-              loading
-              size="lg"
-              variant="plain"
-              sx={{
-                margin: "2em auto",
-                width: "100%",
-              }}
-            ></Button>
+            <EventCards
+              maxItemsInRow={3}
+              isBookmarkIcon={false}
+              isEditIcon={true}
+            ></EventCards>
           )}
         </Stack>
       </CssVarsProvider>

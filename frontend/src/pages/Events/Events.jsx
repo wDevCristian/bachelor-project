@@ -9,7 +9,6 @@ import { Typography } from "@mui/joy";
 
 export default function Events() {
   const [filters, setFilters] = useState({});
-  console.log(filters);
 
   return (
     <div
