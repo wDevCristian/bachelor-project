@@ -1,16 +1,38 @@
-import { React, useState } from "react";
+import { React, useContext, useEffect, useState } from "react";
 import { Grid, Typography, Button } from "@mui/joy";
 
 import EventCard from "../EventCard/EventCard";
 import { eventTypes } from "../Filter/Filter";
 
-import events from "../../model/mock_data";
-import { CenterFocusStrong } from "@mui/icons-material";
+import eventsMocked from "../../model/mock_data";
+import EventCardLoading from "../EventCard/EventCardLoading";
+import { Context } from "../../main";
+import { getAll } from "../../api/eventAPI";
 
-export default function EventCards({ filters = {}, bookmark = true }) {
+export default function EventCards({
+  filters = {},
+  maxItemsInRow = 4,
+  isBookmarkIcon = false,
+  isEditIcon = false,
+}) {
   const [isLoading, setIsLoading] = useState(true);
+  const [errorObj, setErrorObj] = useState({ isError: false, message: "" });
+  const { events } = useContext(Context);
+  const limit = 16;
+  const page = 1;
 
-  let filteredEvents = events;
+  useEffect(() => {
+    debugger;
+    getAll(limit, page)
+      .then((fetchedEvents) => events.setEvents(fetchedEvents))
+      .catch((error) => {
+        console.log(error);
+        setErrorObj({ isError: true, message: error.message });
+      });
+    setIsLoading(false);
+  }, []);
+
+  let filteredEvents = eventsMocked;
 
   if (Object.keys(filters).length !== 0) {
     filteredEvents = events.filter((e) => {
@@ -88,26 +110,41 @@ export default function EventCards({ filters = {}, bookmark = true }) {
     });
   }
 
-  const preloadedCards = filteredEvents.map((event) => (
-    <Grid xs={12} sm={6} md={4} lg={3} key={event.id}>
-      <EventCard bookmark={bookmark} event={event}></EventCard>
+  const preloadedCards = events.events.map((event) => (
+    <Grid
+      key={event.id}
+      xs={12}
+      sm={6}
+      md={-2 * maxItemsInRow + 12}
+      lg={12 / maxItemsInRow}
+    >
+      <EventCard
+        isBookmarkIcon={isBookmarkIcon}
+        isEditIcon={isEditIcon}
+        event={event}
+      ></EventCard>
     </Grid>
   ));
 
+  const loadingCards = new Array(maxItemsInRow).fill(1).map((e, i) => {
+    return (
+      <Grid
+        key={i}
+        xs={12}
+        sm={6}
+        md={-2 * maxItemsInRow + 12}
+        lg={12 / maxItemsInRow}
+      >
+        <EventCardLoading></EventCardLoading>
+      </Grid>
+    );
+  });
+
   return (
     <Grid container mt={6} pb={14} spacing={3.5}>
-      {/* {isLoading && (
-        <Button
-          loading
-          size="lg"
-          variant="plain"
-          sx={{
-            margin: "2em auto",
-          }}
-        ></Button>
-      )} */}
-      {filteredEvents.length !== 0 && preloadedCards}
-      {filteredEvents.length === 0 && (
+      {isLoading && loadingCards}
+      {!isLoading && events.events.length !== 0 && preloadedCards}
+      {!isLoading && events.events.length === 0 && (
         <Grid xs={12}>
           <Typography level="title-lg" textAlign="center">
             No events found
@@ -117,3 +154,12 @@ export default function EventCards({ filters = {}, bookmark = true }) {
     </Grid>
   );
 }
+
+// ---- data that EventCard attends
+// let eventCardObjectSupply = {
+//   title: "Title",
+//   organizer: "Author",
+//   nrOfParticipants: 25,
+//   date: "04.06.2024",
+//   time: "14:45",
+// };
