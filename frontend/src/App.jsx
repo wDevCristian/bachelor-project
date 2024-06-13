@@ -32,6 +32,12 @@ const App = observer(() => {
           user.setUser(data);
           user.setIsAuth(true);
         })
+        .catch((error) => {
+          console.log(error);
+          user.setIsAuth(false);
+          user.setUser(null);
+          localStorage.removeItem("token");
+        })
         .finally(() => setLoading(false));
     } else {
       user.setIsAuth(false);

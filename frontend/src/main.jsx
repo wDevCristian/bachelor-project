@@ -5,6 +5,7 @@ import "./index.scss";
 import { BrowserRouter } from "react-router-dom";
 import UserStore from "./store/UserStore.js";
 import MenuItemActiveStore from "./store/MenuItemActiveStore.js";
+import EventsStore from "./store/EventsStore.js";
 
 export const Context = createContext(null);
 
@@ -14,6 +15,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       value={{
         user: new UserStore(),
         menuItemActive: new MenuItemActiveStore(),
+        events: new EventsStore(),
       }}
     >
       <BrowserRouter>
