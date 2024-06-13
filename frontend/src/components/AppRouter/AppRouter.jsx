@@ -37,7 +37,7 @@ const AppRouter = observer(() => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/events" element={<Events />} />
-      <Route path="/events/eventId" element={<EventDetails />} />
+      <Route path="/events/:eventId" element={<EventDetails />} />
 
       {user.isAuth && (
         <>
