@@ -13,7 +13,15 @@ export default function EventCardLoading() {
   const MAX_LENGTH_ORGANIZER_PLACEHOLDER = "########### ###########";
 
   return (
-    <Card>
+    <Card
+      sx={{
+        minHeight: {
+          xs: "300px",
+          md: "350px",
+          lg: "320px",
+        },
+      }}
+    >
       <CardOverflow>
         <AspectRatio minHeight="120px" maxHeight="200px">
           <Skeleton />

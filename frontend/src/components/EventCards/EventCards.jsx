@@ -18,18 +18,17 @@ export default function EventCards({
   const [isLoading, setIsLoading] = useState(true);
   const [errorObj, setErrorObj] = useState({ isError: false, message: "" });
   const { events } = useContext(Context);
-  const limit = 16;
+  const limit = 32;
   const page = 1;
 
   useEffect(() => {
-    debugger;
     getAll(limit, page)
       .then((fetchedEvents) => events.setEvents(fetchedEvents))
       .catch((error) => {
         console.log(error);
         setErrorObj({ isError: true, message: error.message });
-      });
-    setIsLoading(false);
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
   let filteredEvents = eventsMocked;
@@ -126,7 +125,7 @@ export default function EventCards({
     </Grid>
   ));
 
-  const loadingCards = new Array(maxItemsInRow).fill(1).map((e, i) => {
+  const loadingCards = new Array(maxItemsInRow * 2).fill(1).map((e, i) => {
     return (
       <Grid
         key={i}

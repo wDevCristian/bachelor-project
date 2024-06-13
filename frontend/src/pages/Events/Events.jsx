@@ -44,7 +44,12 @@ export default function Events() {
         </Typography>
       </Typography>
       <Filter setFilters={setFilters} />
-      <EventCards filters={filters} bookmark={true} />
+      <EventCards
+        filters={filters}
+        isBookmarkIcon={true}
+        isEditIcon={false}
+        maxItemsInRow={4}
+      />
     </div>
   );
 }

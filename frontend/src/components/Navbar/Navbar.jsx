@@ -376,6 +376,7 @@ const Navbar = observer(() => {
                 onClick={() => {
                   user.setIsAuth(false);
                   navigate("/");
+                  menuItemActive.setActiveItem("home");
                   setOpenModal(false);
                   localStorage.removeItem("token");
                 }}
