@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./Navbar.scss";
 import "../Logo/Logo";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import Logo from "../Logo/Logo";
 import Stack from "@mui/joy/Stack";
@@ -43,7 +43,8 @@ import { observer } from "mobx-react-lite";
 const Navbar = observer(() => {
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { user, menuItemActive } = useContext(Context);
 
   useEffect(() => {
@@ -375,7 +376,11 @@ const Navbar = observer(() => {
                 color="primary"
                 onClick={() => {
                   user.setIsAuth(false);
-                  navigate("/");
+                  if (location.pathname.split("/")[1] === "myevents") {
+                    navigate("/");
+                  } else {
+                    navigate(location.pathname);
+                  }
                   menuItemActive.setActiveItem("home");
                   setOpenModal(false);
                   localStorage.removeItem("token");

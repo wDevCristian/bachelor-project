@@ -41,7 +41,11 @@ export default function Login() {
       navigate("/");
     } catch (error) {
       setIsLoading(false);
-      setError({ isError: true, errorMsg: error.response.data.message });
+      setError({
+        isError: true,
+        errorMsg:
+          error.response?.data?.message ?? "Network connection problems",
+      });
     }
   }
 
