@@ -10,6 +10,7 @@ import UserEvents from "../../pages/UserEvents/UserEvents";
 import EventCreate from "../../pages/EventCreate/EventCreate";
 import FAQ from "../../pages/FAQ/FAQ";
 import NoPageError from "../../pages/NoPageError/NoPageError";
+import EventEdit from "../../pages/EventEdit/EventEdit";
 import { Context } from "../../main";
 
 // TODO: implement this on events and detail events page
@@ -43,6 +44,7 @@ const AppRouter = observer(() => {
         <>
           <Route path="/myevents" element={<UserEvents />} />
           <Route path="/myevents/create" element={<EventCreate />} />
+          <Route path="/myevents/edit/:eventId" element={<EventEdit />} />
         </>
       )}
 
