@@ -162,7 +162,7 @@ export default function UserEvents() {
                   <ListItemDecorator sx={{ color: "neutral.500" }}>
                     <BookmarkAddRoundedIcon fontSize="small" />
                   </ListItemDecorator>
-                  <ListItemContent>Marcate</ListItemContent>
+                  <ListItemContent>Salvate</ListItemContent>
                   {isLoading && (
                     <Skeleton
                       animation={import.meta.env.VITE_SKELETON_ANIMATION_TYPE}
