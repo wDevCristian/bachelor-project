@@ -38,7 +38,10 @@ import {
 import { CssVarsProvider } from "@mui/joy/styles";
 
 import { Context } from "../../main";
-import { getEventsByOrganizerId } from "../../api/eventAPI";
+import {
+  getEventsByOrganizerId,
+  getSavedEventsByUserId,
+} from "../../api/eventAPI";
 
 // MUI icons
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
@@ -46,27 +49,54 @@ import PersonIcon from "@mui/icons-material/Person";
 import BookmarkAddRoundedIcon from "@mui/icons-material/BookmarkAddRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ReportIcon from "@mui/icons-material/Report";
+import { EventSeat } from "@mui/icons-material";
+import { observer } from "mobx-react-lite";
 
-export default function UserEvents() {
-  const [menuItem, setMenuItem] = useState("organizer");
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorObj, setErrorObj] = useState({ isError: false, message: "" });
+const UserEvents = observer(() => {
   const { events, user } = useContext(Context);
+  const [menuItem, setMenuItem] = useState("saved");
+  const [isLoading, setIsLoading] = useState(events.organizedEventsHasChanged);
+  const [errorObj, setErrorObj] = useState({ isError: false, message: "" });
 
   useEffect(() => {
-    getEventsByOrganizerId(user.user.id)
-      .then((fetchedEvents) => {
-        events.setOrganizedEvents(fetchedEvents);
-        // throw new Error("Test events not found.");
-      })
-      .catch((error) => {
-        console.log(error);
-        setErrorObj({ isError: true, message: error.message });
-      })
-      .finally(() => setIsLoading(false));
+    if (events.organizedEventsHasChanged) {
+      getEventsByOrganizerId(user.user.id)
+        .then((fetchedEvents) => {
+          events.setOrganizedEvents(fetchedEvents);
+          console.log("Fetching organized events...");
+          // throw new Error("Test events not found.");
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrorObj({ isError: true, message: error.message });
+        })
+        .finally(() => {
+          events.setOrganizedEventsHasChanged(false);
+          setIsLoading(false);
+        });
+    }
   }, []);
 
-  const sendObj = events.organizedEvents.map((event) => {
+  useEffect(() => {
+    if (events.savedEventsHasChanged) {
+      getSavedEventsByUserId(user.user.id)
+        .then((fetchedEvents) => {
+          events.setSavedEvents(fetchedEvents);
+          console.log("Fetching saved events...");
+          // throw new Error("Test events not found.");
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrorObj({ isError: true, message: error.message });
+        })
+        .finally(() => {
+          events.setSavedEventsHasChaged(false);
+          setIsLoading(false);
+        });
+    }
+  }, []);
+
+  const sendObjOrganized = events.organizedEvents.map((event) => {
     return {
       ...event,
       user: {
@@ -171,12 +201,11 @@ export default function UserEvents() {
                       height={20}
                     />
                   )}
-                  {!isLoading &&
-                    false && ( // TODO: replace false and {0} with "events.savedEvents.length > 0"
-                      <Chip variant="soft" color="primary" size="sm">
-                        {0}
-                      </Chip>
-                    )}
+                  {!isLoading && events.savedEvents.length > 0 && (
+                    <Chip variant="soft" color="primary" size="sm">
+                      {events.savedEvents.length}
+                    </Chip>
+                  )}
                 </ListItemButton>
               </ListItem>
             </List>
@@ -184,6 +213,7 @@ export default function UserEvents() {
           <Box width="100%">
             {!errorObj.isError && menuItem === "saved" && (
               <EventCards
+                eventsObject={events.savedEvents}
                 maxItemsInRow={3}
                 isBookmarkIcon={false}
                 isEditIcon={false}
@@ -200,7 +230,7 @@ export default function UserEvents() {
             )}
             {!errorObj.isError && menuItem === "organizer" && (
               <EventCards
-                eventsObject={sendObj}
+                eventsObject={sendObjOrganized}
                 maxItemsInRow={3}
                 isBookmarkIcon={false}
                 isEditIcon={true}
@@ -235,4 +265,6 @@ export default function UserEvents() {
       </CssVarsProvider>
     </div>
   );
-}
+});
+
+export default UserEvents;

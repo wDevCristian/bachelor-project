@@ -381,7 +381,6 @@ const Navbar = observer(() => {
                   } else {
                     navigate(location.pathname);
                   }
-                  menuItemActive.setActiveItem("home");
                   setOpenModal(false);
                   localStorage.removeItem("token");
                 }}

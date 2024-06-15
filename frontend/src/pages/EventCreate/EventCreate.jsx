@@ -68,7 +68,7 @@ export default function EventCreate() {
     .split(".")
     .reverse()
     .join("-");
-  const { user } = useContext(Context);
+  const { user, events } = useContext(Context);
   const navigate = useNavigate();
 
   function handleFileUpload(e) {
@@ -329,7 +329,12 @@ export default function EventCreate() {
                 </FormHelperText>
                 <MapComponent></MapComponent>
               </Box>
-              <Button loading={isLoading} loadingPosition="start" type="submit">
+              <Button
+                loading={isLoading}
+                loadingPosition="start"
+                type="submit"
+                onClick={() => events.setOrganizedEventsHasChanged(true)}
+              >
                 {isLoading ? "Crează eveniment..." : "Crează eveniment"}
               </Button>
             </Stack>

@@ -22,7 +22,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ReportIcon from "@mui/icons-material/Report";
 
 export default function Login() {
-  const { user, menuItemActive } = useContext(Context);
+  const { user, menuItemActive, events } = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -112,6 +112,10 @@ export default function Login() {
               type="submit"
               sx={{ mt: 1 }}
               variant="soft"
+              onClick={() => {
+                events.setSavedEventsHasChaged(true);
+                events.setOrganizedEventsHasChanged(true);
+              }}
             >
               {isLoading ? "Login..." : "Login"}
             </Button>

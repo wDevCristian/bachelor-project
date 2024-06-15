@@ -1,5 +1,5 @@
 import { React, useContext, useEffect, useState } from "react";
-import { getAll } from "../../api/eventAPI";
+import { getAll, getSavedEventsByUserId } from "../../api/eventAPI";
 import { Context } from "../../main";
 
 // Own components
@@ -10,26 +10,50 @@ import EventCards from "../../components/EventCards/EventCards";
 import { Alert, IconButton, Typography } from "@mui/joy";
 import ReportIcon from "@mui/icons-material/Report";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import { observer } from "mobx-react-lite";
 
-export default function Events() {
+const Events = observer(() => {
   const [filters, setFilters] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
   const [errorObj, setErrorObj] = useState({ isError: false, message: "" });
-  const { events } = useContext(Context);
+  const { events, user } = useContext(Context);
+  const [isLoading, setIsLoading] = useState(events.savedEventsHasChanged);
   const limit = 16;
   const page = 1;
+
+  useEffect(() => {
+    if (user?.user?.id && events.savedEventsHasChanged) {
+      getSavedEventsByUserId(user.user.id)
+        .then((fetchedEvents) => {
+          events.setSavedEvents(fetchedEvents);
+          console.log("Fetching saved events...");
+          // throw new Error("Test events not found.");
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrorObj({ isError: true, message: error.message });
+        })
+        .finally(() => {
+          events.setSavedEventsHasChaged(false);
+          setIsLoading(false);
+        });
+    }
+  }, [events.savedEventsHasChanged]);
 
   useEffect(() => {
     getAll(limit, page)
       .then((fetchedEvents) => {
         events.setEvents(fetchedEvents);
+        console.log("Fetching all events...");
+
         // throw new Error("Test events not found.");
       })
       .catch((error) => {
         console.log(error);
         setErrorObj({ isError: true, message: error.message });
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   return (
@@ -102,4 +126,6 @@ export default function Events() {
       )}
     </div>
   );
-}
+});
+
+export default Events;

@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 // React Router import
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../../main";
+import { createSavedEvent } from "../../api/eventAPI";
 
 // MUI framework import
 import {
@@ -26,7 +27,8 @@ import {
 // MUI icons import
 import TodayRoundedIcon from "@mui/icons-material/TodayRounded";
 import EmojiPeopleRoundedIcon from "@mui/icons-material/EmojiPeopleRounded";
-import BookmarkAddRoundedIcon from "@mui/icons-material/BookmarkAddRounded";
+import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
+import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -60,11 +62,24 @@ export default function EventCard({ event, isBookmarkIcon, isEditIcon }) {
     return title.slice(0, brakePosition + 1) + "...";
   };
 
-  const { user } = useContext(Context);
+  const { user, events } = useContext(Context);
   const [snackbarSavedOpen, setSnackbarSavedOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
-  console.log(event);
+
+  const eventIsInSaved = events.savedEvents.map((i) => i.id).includes(event.id);
+
+  async function saveEventHandler() {
+    if (!eventIsInSaved) {
+      const result = await createSavedEvent(user.user.id, event.id);
+
+      events.setSavedEventsHasChaged(true);
+
+      if (result.isCreated === true) {
+        setSnackbarSavedOpen(true);
+      }
+    }
+  }
 
   return (
     <>
@@ -124,7 +139,7 @@ export default function EventCard({ event, isBookmarkIcon, isEditIcon }) {
                 sx={iconButtonStyle}
                 onClick={() => setOpenModal(true)}
               >
-                <BookmarkAddRoundedIcon fontSize="md" />
+                <BookmarkAddOutlinedIcon fontSize="md" />
               </IconButton>
             </Tooltip>
           )}
@@ -136,7 +151,11 @@ export default function EventCard({ event, isBookmarkIcon, isEditIcon }) {
                 color="neutral"
                 placement="top"
                 variant="solid"
-                title="Salvează evenimentul"
+                title={
+                  eventIsInSaved
+                    ? "Evenimentul e salvat"
+                    : "Salvează evenimentul"
+                }
               >
                 <IconButton
                   aria-label="event_bookmark"
@@ -144,28 +163,39 @@ export default function EventCard({ event, isBookmarkIcon, isEditIcon }) {
                   variant="soft"
                   color="primary"
                   sx={iconButtonStyle}
-                  onClick={() => {
-                    setSnackbarSavedOpen(true);
-                  }}
+                  onClick={saveEventHandler}
                 >
-                  <BookmarkAddRoundedIcon fontSize="md" />
+                  {eventIsInSaved ? (
+                    <BookmarkAddedIcon fontSize="md" />
+                  ) : (
+                    <BookmarkAddOutlinedIcon fontSize="md" />
+                  )}
                 </IconButton>
               </Tooltip>
             )}
 
           {/* load edit icon */}
           {isEditIcon && (
-            <Link to={`/myevents/edit/${event.id}`}>
+            <Tooltip
+              arrow={false}
+              color="neutral"
+              placement="top"
+              variant="solid"
+              title="Editează evenimentul"
+            >
               <IconButton
                 aria-label="Like minimal photography"
                 size="lg"
                 variant="soft"
                 color="danger"
                 sx={iconButtonStyle}
+                onClick={() => {
+                  navigate(`/myevents/edit/${event.id}`);
+                }}
               >
                 <EditIcon fontSize="md" />
               </IconButton>
-            </Link>
+            </Tooltip>
           )}
         </CardOverflow>
         <CardContent

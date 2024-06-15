@@ -20,6 +20,26 @@ export async function getEventsDetailsById(id) {
   return data;
 }
 
+export async function createSavedEvent(userId, eventId) {
+  const { data } = await $authHost.post(`${EVENT_API_URL}/saved`, {
+    userId,
+    eventId,
+  });
+  return data;
+}
+
+export async function getSavedEventsByUserId(userId) {
+  const { data } = await $authHost.get(`${EVENT_API_URL}/saved/${userId}`);
+  return data;
+}
+
+export async function deleteSavedEvent(userId, eventId) {
+  const { data } = await $authHost.delete(
+    `${EVENT_API_URL}/saved?userId=${userId}&eventId=${eventId}`
+  );
+  return data;
+}
+
 export async function create(event) {}
 
 export async function updateById(id, newEventRow) {}

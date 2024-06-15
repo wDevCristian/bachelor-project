@@ -25,15 +25,22 @@ import {
 import PlaceIcon from "@mui/icons-material/Place";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
-import BookmarkAddRoundedIcon from "@mui/icons-material/BookmarkAddRounded";
+import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
+import BookmarkRemove from "@mui/icons-material/BookmarkRemove";
 import CloseIcon from "@mui/icons-material/Close";
 import ImageIcon from "@mui/icons-material/Image";
 
 import MapComponent from "../../components/MapComponent/MapComponent";
-import { Close } from "@mui/icons-material";
 import { Context } from "../../main";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getEventsDetailsById } from "../../api/eventAPI";
+import {
+  createSavedEvent,
+  deleteSavedEvent,
+  getEventsDetailsById,
+  getSavedEventsByUserId,
+} from "../../api/eventAPI";
+import { observer } from "mobx-react-lite";
+import { LocalConvenienceStoreOutlined } from "@mui/icons-material";
 
 const prototype = {
   id: null,
@@ -62,13 +69,13 @@ const prototype = {
 };
 
 const weekDays = [
+  "Duminică",
   "Luni",
   "Marți",
   "Miercuri",
   "Joi",
   "Vineri",
   "Sâmbătă",
-  "Duminică",
 ];
 
 const modalTitleSave = "Dorești să salvezi evenimentul?";
@@ -77,9 +84,15 @@ const modalTitleParticipate = "Dorești să participi la eveniment?";
 const modalMessageParticipate =
   "Pentru a participa la eveniment, trebuie să te logezi.";
 
-export default function EventDetails() {
+const savedEventAddMessage = "Evenimentul a fost adăugat în salvate.";
+const savedEventRemoveMessage = "Evenimentul a fost șters din salvate.";
+
+const EventDetails = observer(() => {
   const [snackbarParticipateOpen, setSnackbarParticipateOpen] = useState(false);
-  const [snackbarSavedOpen, setSnackbarSavedOpen] = useState(false);
+  const [snackbarSavedOpen, setSnackbarSavedOpen] = useState({
+    isOpened: false,
+    message: "",
+  });
   const [event, setEvent] = useState(prototype);
   const [openModal, setOpenModal] = useState({
     state: false,
@@ -87,7 +100,7 @@ export default function EventDetails() {
     message: modalMessageSave,
   });
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useContext(Context);
+  const { user, events } = useContext(Context);
   const navigate = useNavigate();
   const { eventId } = useParams();
 
@@ -95,6 +108,7 @@ export default function EventDetails() {
     getEventsDetailsById(eventId)
       .then((fetchedEvent) => {
         setEvent(fetchedEvent);
+        console.log("Fetching event details events...");
         // throw new Error("Test events not found.");
       })
       .catch((error) => {
@@ -104,8 +118,53 @@ export default function EventDetails() {
       .finally(() => setIsLoading(false));
   }, []);
 
+  useEffect(() => {
+    if (user?.user?.id && events.savedEventsHasChanged) {
+      getSavedEventsByUserId(user.user.id)
+        .then((fetchedEvents) => {
+          events.setSavedEvents(fetchedEvents);
+          console.log("Fetching saved events...");
+          // throw new Error("Test events not found.");
+        })
+        .catch((error) => {
+          console.log(error);
+          // setErrorObj({ isError: true, message: error.message });
+        })
+        .finally(() => {
+          events.setSavedEventsHasChaged(false);
+          setIsLoading(false);
+        });
+    }
+  }, [events.savedEventsHasChanged]);
+
   const startDateObj = new Date(event.startDateTime);
   const endDateObj = new Date(event.endDateTime);
+
+  async function saveEventHandler() {
+    if (!eventIsInSaved) {
+      const result = await createSavedEvent(user.user.id, event.id);
+      console.log("Event has been created in DB.");
+      events.setSavedEventsHasChaged(true);
+      console.log("Event has changed = true");
+      if (result.isCreated === true)
+        setSnackbarSavedOpen({ isOpened: true, message: savedEventAddMessage });
+    } else {
+      const result = await deleteSavedEvent(user.user.id, event.id);
+      console.log("Event has been removed from savedEvents.");
+      events.setSavedEventsHasChaged(true);
+      console.log("Event has changed = true");
+      if (result.isDeleted === true)
+        setSnackbarSavedOpen({
+          isOpened: true,
+          message: savedEventRemoveMessage,
+        });
+    }
+  }
+
+  const eventIsInSaved = events.savedEvents.map((i) => i.id).includes(event.id);
+  console.log(events.savedEvents);
+  console.log(event.id);
+  console.log(eventIsInSaved);
 
   return (
     <div
@@ -227,7 +286,7 @@ export default function EventDetails() {
                       {endDateObj.toLocaleTimeString().slice(0, -3)}
                     </Typography>
                     <Typography level="body-sm">
-                      {weekDays[startDateObj.getUTCDay()]},{" "}
+                      {weekDays[startDateObj.getDay()]},{" "}
                       {startDateObj.toLocaleDateString()}
                     </Typography>
                   </Box>
@@ -318,7 +377,7 @@ export default function EventDetails() {
                     }
                   >
                     <IconButton>
-                      <BookmarkAddRoundedIcon />
+                      <BookmarkAddOutlinedIcon fontSize="md" />
                     </IconButton>
                   </Tooltip>
                   <Button
@@ -348,10 +407,18 @@ export default function EventDetails() {
                     color="neutral"
                     placement="top"
                     variant="solid"
-                    title="Salvează eveniment"
+                    title={
+                      eventIsInSaved
+                        ? "Elimină din salvate"
+                        : "Salvează evenimentul"
+                    }
                   >
-                    <IconButton onClick={() => setSnackbarSavedOpen(true)}>
-                      <BookmarkAddRoundedIcon />
+                    <IconButton onClick={saveEventHandler}>
+                      {eventIsInSaved ? (
+                        <BookmarkRemove fontSize="md" />
+                      ) : (
+                        <BookmarkAddOutlinedIcon fontSize="md" />
+                      )}
                     </IconButton>
                   </Tooltip>
                   <Button onClick={() => setSnackbarParticipateOpen(true)}>
@@ -389,7 +456,7 @@ export default function EventDetails() {
           </Snackbar>
           <Snackbar
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            open={snackbarSavedOpen}
+            open={snackbarSavedOpen.isOpened}
             autoHideDuration={3000}
             color="primary"
             size="md"
@@ -398,11 +465,19 @@ export default function EventDetails() {
               if (reason === "clickaway") {
                 return;
               }
-              setSnackbarSavedOpen(false);
+              setSnackbarSavedOpen({
+                isOpened: false,
+                message: snackbarSavedOpen.message,
+              });
             }}
             endDecorator={
               <IconButton
-                onClick={() => setSnackbarSavedOpen(false)}
+                onClick={() =>
+                  setSnackbarSavedOpen({
+                    isOpened: false,
+                    message: snackbarSavedOpen.message,
+                  })
+                }
                 size="md"
                 variant="soft"
                 color="primary"
@@ -411,7 +486,7 @@ export default function EventDetails() {
               </IconButton>
             }
           >
-            Eveniment adăugat în salvate
+            {snackbarSavedOpen.message}
           </Snackbar>
           <Modal
             keepMounted
@@ -474,4 +549,6 @@ export default function EventDetails() {
       )}
     </div>
   );
-}
+});
+
+export default EventDetails;
