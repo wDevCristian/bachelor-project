@@ -20,6 +20,26 @@ export async function getEventsDetailsById(id) {
   return data;
 }
 
+export async function createAttendee(userId, eventId) {
+  const { data } = await $authHost.post(`${EVENT_API_URL}/attendees`, {
+    userId,
+    eventId,
+  });
+  return data;
+}
+
+export async function getAllAttendees(userId) {
+  const { data } = await $authHost.get(`${EVENT_API_URL}/attendees/${userId}`);
+  return data;
+}
+
+export async function deleteAttendee(userId, eventId) {
+  const { data } = await $authHost.delete(
+    `${EVENT_API_URL}/attendees?userId=${userId}&eventId=${eventId}`
+  );
+  return data;
+}
+
 export async function createSavedEvent(userId, eventId) {
   const { data } = await $authHost.post(`${EVENT_API_URL}/saved`, {
     userId,

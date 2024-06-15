@@ -39,6 +39,7 @@ import { CssVarsProvider } from "@mui/joy/styles";
 
 import { Context } from "../../main";
 import {
+  getAllAttendees,
   getEventsByOrganizerId,
   getSavedEventsByUserId,
 } from "../../api/eventAPI";
@@ -91,6 +92,25 @@ const UserEvents = observer(() => {
         })
         .finally(() => {
           events.setSavedEventsHasChaged(false);
+          setIsLoading(false);
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (events.participantEventsHasChanged) {
+      getAllAttendees(user.user.id)
+        .then((fetchedEvents) => {
+          events.setParticipantEvents(fetchedEvents);
+          console.log("Fetching participant events...");
+          // throw new Error("Test events not found.");
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrorObj({ isError: true, message: error.message });
+        })
+        .finally(() => {
+          events.setParticipantEventsHasChaged(false);
           setIsLoading(false);
         });
     }
@@ -153,9 +173,9 @@ const UserEvents = observer(() => {
                     />
                   )}
                   {!isLoading &&
-                    false && ( // TODO: replace false and "0" with "events.participateEvents.length > 0"
+                    events.participantEvents.length > 0 && ( // TODO: replace false and "0" with "events.participateEvents.length > 0"
                       <Chip variant="soft" color="primary" size="sm">
-                        {"0"}
+                        {events.participantEvents.length}
                       </Chip>
                     )}
                 </ListItemButton>
@@ -222,6 +242,7 @@ const UserEvents = observer(() => {
             )}
             {!errorObj.isError && menuItem === "participant" && (
               <EventCards
+                eventsObject={events.participantEvents}
                 maxItemsInRow={3}
                 isBookmarkIcon={false}
                 isEditIcon={false}

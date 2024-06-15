@@ -34,8 +34,11 @@ import MapComponent from "../../components/MapComponent/MapComponent";
 import { Context } from "../../main";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
+  createAttendee,
   createSavedEvent,
+  deleteAttendee,
   deleteSavedEvent,
+  getAllAttendees,
   getEventsDetailsById,
   getSavedEventsByUserId,
 } from "../../api/eventAPI";
@@ -86,9 +89,14 @@ const modalMessageParticipate =
 
 const savedEventAddMessage = "Evenimentul a fost adăugat în salvate.";
 const savedEventRemoveMessage = "Evenimentul a fost șters din salvate.";
+const participantEventAddMessage = "Ai devenit participant la acest eveniment.";
+const participantEventRemoveMessage = "Te-ai retras de la acest eveniment.";
 
 const EventDetails = observer(() => {
-  const [snackbarParticipateOpen, setSnackbarParticipateOpen] = useState(false);
+  const [snackbarParticipateOpen, setSnackbarParticipateOpen] = useState({
+    isOpened: false,
+    message: "",
+  });
   const [snackbarSavedOpen, setSnackbarSavedOpen] = useState({
     isOpened: false,
     message: "",
@@ -137,15 +145,34 @@ const EventDetails = observer(() => {
     }
   }, [events.savedEventsHasChanged]);
 
+  useEffect(() => {
+    if (events.participantEventsHasChanged) {
+      getAllAttendees(user.user.id)
+        .then((fetchedEvents) => {
+          events.setParticipantEvents(fetchedEvents);
+          console.log("Fetching participant events...");
+          // throw new Error("Test events not found.");
+        })
+        .catch((error) => {
+          console.log(error);
+          // setErrorObj({ isError: true, message: error.message });
+        })
+        .finally(() => {
+          events.setParticipantEventsHasChaged(false);
+          setIsLoading(false);
+        });
+    }
+  }, [events.participantEventsHasChanged]);
+
   const startDateObj = new Date(event.startDateTime);
   const endDateObj = new Date(event.endDateTime);
 
   async function saveEventHandler() {
     if (!eventIsInSaved) {
       const result = await createSavedEvent(user.user.id, event.id);
-      console.log("Event has been created in DB.");
+      console.log("Event saved has been created in DB.");
       events.setSavedEventsHasChaged(true);
-      console.log("Event has changed = true");
+      console.log("Event saved has changed = true");
       if (result.isCreated === true)
         setSnackbarSavedOpen({ isOpened: true, message: savedEventAddMessage });
     } else {
@@ -161,10 +188,34 @@ const EventDetails = observer(() => {
     }
   }
 
+  async function participateEventHandler() {
+    if (!eventIsInParticipate) {
+      const result = await createAttendee(user.user.id, event.id);
+      console.log("Event participant has been created in DB.");
+      events.setParticipantEventsHasChaged(true);
+      console.log("Event participant has changed = true");
+      if (result.isCreated === true)
+        setSnackbarParticipateOpen({
+          isOpened: true,
+          message: participantEventAddMessage,
+        });
+    } else {
+      const result = await deleteAttendee(user.user.id, event.id);
+      console.log("Event has been removed from participantEvents.");
+      events.setParticipantEventsHasChaged(true);
+      console.log("Event participant has changed = true");
+      if (result.isDeleted === true)
+        setSnackbarParticipateOpen({
+          isOpened: true,
+          message: participantEventRemoveMessage,
+        });
+    }
+  }
+
   const eventIsInSaved = events.savedEvents.map((i) => i.id).includes(event.id);
-  console.log(events.savedEvents);
-  console.log(event.id);
-  console.log(eventIsInSaved);
+  const eventIsInParticipate = events.participantEvents
+    .map((i) => i.id)
+    .includes(event.id);
 
   return (
     <div
@@ -421,8 +472,11 @@ const EventDetails = observer(() => {
                       )}
                     </IconButton>
                   </Tooltip>
-                  <Button onClick={() => setSnackbarParticipateOpen(true)}>
-                    Participă
+                  <Button
+                    onClick={participateEventHandler}
+                    variant={eventIsInParticipate ? "soft" : "solid"}
+                  >
+                    {eventIsInParticipate ? "Mă retrag" : "Participă"}
                   </Button>
                 </>
               )}
@@ -430,7 +484,7 @@ const EventDetails = observer(() => {
           </Stack>
           <Snackbar
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            open={snackbarParticipateOpen}
+            open={snackbarParticipateOpen.isOpened}
             autoHideDuration={3000}
             color="primary"
             size="md"
@@ -439,11 +493,19 @@ const EventDetails = observer(() => {
               if (reason === "clickaway") {
                 return;
               }
-              setSnackbarParticipateOpen(false);
+              setSnackbarParticipateOpen({
+                isOpened: false,
+                message: snackbarParticipateOpen.message,
+              });
             }}
             endDecorator={
               <IconButton
-                onClick={() => setSnackbarParticipateOpen(false)}
+                onClick={() =>
+                  setSnackbarParticipateOpen({
+                    isOpened: false,
+                    message: snackbarParticipateOpen.message,
+                  })
+                }
                 size="md"
                 variant="soft"
                 color="primary"
@@ -452,7 +514,7 @@ const EventDetails = observer(() => {
               </IconButton>
             }
           >
-            Înscriere a avut loc cu success
+            {snackbarParticipateOpen.message}
           </Snackbar>
           <Snackbar
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}

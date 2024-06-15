@@ -115,6 +115,7 @@ export default function Login() {
               onClick={() => {
                 events.setSavedEventsHasChaged(true);
                 events.setOrganizedEventsHasChanged(true);
+                events.setParticipantEventsHasChaged(true);
               }}
             >
               {isLoading ? "Login..." : "Login"}

@@ -8,6 +8,8 @@ export default class EventsStore {
     this._eventDetails = {};
     this._savedEventsHasChanged = true;
     this._savedEvents = [];
+    this._participantEventsHasChanged = true;
+    this._participantEvents = [];
     makeAutoObservable(this);
   }
 
@@ -34,6 +36,13 @@ export default class EventsStore {
   get savedEvents() {
     return this._savedEvents;
   }
+  get participantEventsHasChanged() {
+    return this._participantEventsHasChanged;
+  }
+
+  get participantEvents() {
+    return this._participantEvents;
+  }
 
   setEvents(events) {
     this._events = events;
@@ -57,5 +66,12 @@ export default class EventsStore {
 
   setSavedEvents(savedEvents) {
     this._savedEvents = savedEvents;
+  }
+  setParticipantEventsHasChaged(bool) {
+    this._participantEventsHasChanged = bool;
+  }
+
+  setParticipantEvents(participantEvents) {
+    this._participantEvents = participantEvents;
   }
 }

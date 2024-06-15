@@ -231,7 +231,7 @@ export default function EventCard({ event, isBookmarkIcon, isEditIcon }) {
                 fontWeight="md"
                 textColor="text.secondary"
               >
-                {event.maxNrOfParticipants}
+                {event.participants}
               </Typography>
             </Stack>
             <Divider orientation="vertical" />
