@@ -8,8 +8,15 @@ import { $authHost } from "../api/index.js";
  * @returns {Promise<AxiosResponse<any, any>>}
  */
 
-export default async function submitFormHandler(event, organizerId) {
+export default async function submitFormHandler(
+  event,
+  organizerId,
+  file,
+  isCreated,
+  eventId = null
+) {
   event.preventDefault();
+  console.log(event);
 
   const startDateTime = formatStartDateTime(
     event.target[3].value,
@@ -31,6 +38,10 @@ export default async function submitFormHandler(event, organizerId) {
     description: event.target[11].value,
     picture: event.target[10].files[0] ?? null,
   };
+
+  if (typeof file === "string") {
+    eventObject.picture = file;
+  }
 
   const lat = localStorage.getItem("humanReadableCoords").split(",")[0];
   const lon = localStorage.getItem("humanReadableCoords").split(",")[1];
@@ -81,9 +92,16 @@ export default async function submitFormHandler(event, organizerId) {
   for (let pair of formData.entries()) {
     console.log(`${pair[0]}: ${pair[1]}`);
   }
+  console.log("Picture: ", eventObject.picture);
 
-  response = await $authHost.post(`/api/event/create`, formData);
-  return response;
+  if (isCreated) {
+    const createResponse = await $authHost.post(`/api/event/create`, formData);
+    return createResponse;
+  } else {
+    formData.append("id", eventId);
+    const updateResponse = await $authHost.put(`/api/event/update`, formData);
+    return updateResponse;
+  }
 }
 
 /**
