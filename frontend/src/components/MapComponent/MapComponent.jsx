@@ -12,37 +12,17 @@ import { Modify } from "ol/interaction";
 import { Icon, Style } from "ol/style.js";
 import { OGCMapTile, Vector as VectorSource } from "ol/source.js";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
-// const ret = require("dotenv").config();
 
-export default function MapComponent() {
-  let candidateCoords = localStorage.getItem("coordinate");
-  let coords;
+const DEFAULT_LATITUDE = 45.75790032199541;
+const DEFAULT_LONGITUDE = 21.22901787020893;
 
-  if (candidateCoords) {
-    coords = candidateCoords.split(",").map((i) => Number(i));
-  }
-
-  const defCoordinates = [21.227263680022283, 45.74687634106235];
-  let OMSformatCoordinates = coords ?? fromLonLat(defCoordinates);
-
-  // async function requestStreetToCoordinates() {
-  //   try {
-  //     const response = await axios.get(
-  //       "https://geocode.maps.co/search?street=555+5th+Ave&city=New+York&state=NY&postalcode=10017&country=US&api_key="
-  //     );
-  //     let coordinates = [
-  //       Number(response.data[0].lon),
-  //       Number(response.data[0].lat),
-  //     ];
-  //     let OMSformatCoordinates = fromLonLat(coordinates);
-  //     console.log(coordinates);
-  //     console.log(OMSformatCoordinates);
-
-  //     return OMSformatCoordinates;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+export default function MapComponent({
+  latitude = DEFAULT_LATITUDE,
+  longitude = DEFAULT_LONGITUDE,
+  allowMarkerMovement = false,
+}) {
+  const coordinates = [longitude, latitude];
+  let OMSformatCoordinates = fromLonLat(coordinates);
 
   useEffect(() => {
     const iconFeature = new Feature({
@@ -85,62 +65,53 @@ export default function MapComponent() {
       }),
     });
 
-    const modify = new Modify({
-      hitDetection: vectorLayer,
-      source: vectorSource,
-    });
-    modify.on(["modifystart", "modifyend"], function (evt) {
-      document.body.style.cursor =
-        evt.type === "modifystart" ? "grabbing" : "pointer";
+    if (allowMarkerMovement) {
+      const modify = new Modify({
+        hitDetection: vectorLayer,
+        source: vectorSource,
+      });
+      modify.on(["modifystart", "modifyend"], function (evt) {
+        document.body.style.cursor =
+          evt.type === "modifystart" ? "grabbing" : "pointer";
 
-      if (evt.type === "modifyend") {
-        const userCoords = toLonLat(evt.mapBrowserEvent.coordinate);
-        console.log(
-          `https://geocode.maps.co/reverse?lat=${userCoords[1]}&lon=${
-            userCoords[0]
-          }&api_key=${import.meta.env.VITE_GC_API_KEY}`
-        );
-        console.log(
-          `https://www.google.com/maps/dir//${userCoords[1]},${userCoords[0]}/@${userCoords[1]},${userCoords[0]},20z?hl=ro&entry=ttu`
-        );
+        if (evt.type === "modifyend") {
+          const userCoords = toLonLat(evt.mapBrowserEvent.coordinate);
 
-        // https://www.google.com/maps/dir//45.7494975,21.2413614/@45.7494151,21.2413245,20z?hl=ro&entry=ttu
-
-        localStorage.setItem(
-          "coordinate",
-          evt.mapBrowserEvent.coordinate.toString()
-        );
-        localStorage.setItem(
-          "humanReadableCoords",
-          `${userCoords[1]},${userCoords[0]}`
-        );
-        if (
-          import.meta.env.VITE_GC_API_KEY !== null &&
-          import.meta.env.VITE_GC_API_KEY !== undefined
-        ) {
-          axios
-            .get(
-              `https://geocode.maps.co/reverse?lat=${userCoords[1]}&lon=${
-                userCoords[0]
-              }&api_key=${import.meta.env.VITE_GC_API_KEY}`
-            )
-            .then((response) => {
-              console.log(response);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          localStorage.setItem(
+            "coordinate",
+            evt.mapBrowserEvent.coordinate.toString()
+          );
+          localStorage.setItem(
+            "humanReadableCoords",
+            `${userCoords[1]},${userCoords[0]}`
+          );
+          if (
+            import.meta.env.VITE_GC_API_KEY !== null &&
+            import.meta.env.VITE_GC_API_KEY !== undefined
+          ) {
+            axios
+              .get(
+                `https://geocode.maps.co/reverse?lat=${userCoords[1]}&lon=${
+                  userCoords[0]
+                }&api_key=${import.meta.env.VITE_GC_API_KEY}`
+              )
+              .then((response) => {
+                console.log(response);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }
         }
-      }
-      console.log(evt.mapBrowserEvent);
-    });
-    const overlaySource = modify.getOverlay().getSource();
-    overlaySource.on(["addfeature", "removefeature"], function (evt) {
-      document.body.style.cursor =
-        evt.type === "addfeature" ? "pointer" : "auto";
-    });
+      });
+      const overlaySource = modify.getOverlay().getSource();
+      overlaySource.on(["addfeature", "removefeature"], function (evt) {
+        document.body.style.cursor =
+          evt.type === "addfeature" ? "pointer" : "auto";
+      });
 
-    map.addInteraction(modify);
+      map.addInteraction(modify);
+    }
 
     return () => map.setTarget(null);
   }, []);

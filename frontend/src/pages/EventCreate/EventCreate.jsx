@@ -86,7 +86,7 @@ export default function EventCreate() {
     try {
       e.preventDefault();
       setIsLoading(true);
-      const response = await submitFormHandler(e, user.user.id);
+      const response = await submitFormHandler(e, user.user.id, file, true);
       console.log(response);
       setIsLoading(false);
       setIsSend({ send: true, message: "Evenimentul a fost creat" });
@@ -116,7 +116,7 @@ export default function EventCreate() {
                   }
                   slotProps={{
                     input: {
-                      maxlength: { MAX_TITLE_LENGTH },
+                      maxlength: MAX_TITLE_LENGTH,
                     },
                   }}
                   required
@@ -319,6 +319,11 @@ export default function EventCreate() {
                       {charsDescription}
                     </Typography>
                   }
+                  slotProps={{
+                    textarea: {
+                      maxLength: MAX_DESC_LENGTH,
+                    },
+                  }}
                 />
               </Box>
               <Box>
@@ -327,7 +332,7 @@ export default function EventCreate() {
                   Glisați markerul roșu în locația în care va fi organizat
                   evenimentul.
                 </FormHelperText>
-                <MapComponent></MapComponent>
+                <MapComponent allowMarkerMovement={true}></MapComponent>
               </Box>
               <Button
                 loading={isLoading}
