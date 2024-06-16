@@ -50,12 +50,11 @@ import PersonIcon from "@mui/icons-material/Person";
 import BookmarkAddRoundedIcon from "@mui/icons-material/BookmarkAddRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ReportIcon from "@mui/icons-material/Report";
-import { EventSeat } from "@mui/icons-material";
 import { observer } from "mobx-react-lite";
 
 const UserEvents = observer(() => {
   const { events, user } = useContext(Context);
-  const [menuItem, setMenuItem] = useState("saved");
+  const [menuItem, setMenuItem] = useState("participant");
   const [isLoading, setIsLoading] = useState(events.organizedEventsHasChanged);
   const [errorObj, setErrorObj] = useState({ isError: false, message: "" });
 
@@ -65,7 +64,6 @@ const UserEvents = observer(() => {
         .then((fetchedEvents) => {
           events.setOrganizedEvents(fetchedEvents);
           console.log("Fetching organized events...");
-          // throw new Error("Test events not found.");
         })
         .catch((error) => {
           console.log(error);
@@ -76,7 +74,7 @@ const UserEvents = observer(() => {
           setIsLoading(false);
         });
     }
-  }, []);
+  }, [events.organizedEventsHasChanged]);
 
   useEffect(() => {
     if (events.savedEventsHasChanged) {
@@ -84,7 +82,6 @@ const UserEvents = observer(() => {
         .then((fetchedEvents) => {
           events.setSavedEvents(fetchedEvents);
           console.log("Fetching saved events...");
-          // throw new Error("Test events not found.");
         })
         .catch((error) => {
           console.log(error);
@@ -95,7 +92,7 @@ const UserEvents = observer(() => {
           setIsLoading(false);
         });
     }
-  }, []);
+  }, [events.savedEventsHasChanged]);
 
   useEffect(() => {
     if (events.participantEventsHasChanged) {
@@ -103,7 +100,6 @@ const UserEvents = observer(() => {
         .then((fetchedEvents) => {
           events.setParticipantEvents(fetchedEvents);
           console.log("Fetching participant events...");
-          // throw new Error("Test events not found.");
         })
         .catch((error) => {
           console.log(error);
@@ -114,7 +110,7 @@ const UserEvents = observer(() => {
           setIsLoading(false);
         });
     }
-  }, []);
+  }, [events.participantEventsHasChanged]);
 
   const sendObjOrganized = events.organizedEvents.map((event) => {
     return {
@@ -172,12 +168,11 @@ const UserEvents = observer(() => {
                       height={20}
                     />
                   )}
-                  {!isLoading &&
-                    events.participantEvents.length > 0 && ( // TODO: replace false and "0" with "events.participateEvents.length > 0"
-                      <Chip variant="soft" color="primary" size="sm">
-                        {events.participantEvents.length}
-                      </Chip>
-                    )}
+                  {!isLoading && events.participantEvents.length > 0 && (
+                    <Chip variant="soft" color="primary" size="sm">
+                      {events.participantEvents.length}
+                    </Chip>
+                  )}
                 </ListItemButton>
               </ListItem>
               <ListItem>

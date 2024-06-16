@@ -9,7 +9,7 @@ export default function Hero() {
     <div className="hero">
       <div className="container">
         <div className="hero-content">
-          <h2 className="hero-content__title">Imbrățișează Timișoara</h2>
+          <h2 className="hero-content__title">Îmbrățișează Timișoara</h2>
           <p className="hero-content__description">
             Descoperă Timișoara in compania unor persoane dornice de a impărtăși
             frumosul cu tine.
