@@ -146,7 +146,7 @@ const EventDetails = observer(() => {
   }, [events.savedEventsHasChanged]);
 
   useEffect(() => {
-    if (events.participantEventsHasChanged) {
+    if (user?.user?.id && events.participantEventsHasChanged) {
       getAllAttendees(user.user.id)
         .then((fetchedEvents) => {
           events.setParticipantEvents(fetchedEvents);
